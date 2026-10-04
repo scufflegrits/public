@@ -1,0 +1,92 @@
+# Deny everything first — allowlist/whitelist pattern.
+# Nothing is tracked unless explicitly re-included below with a ! rule.
+*
+
+# =============================================================================
+# Reference — files blocked by * above
+# Most important ones for backups/personal projects.
+# * ignores these, and the "Never track" section at the end re-ignores them
+# in case a broad re-include rule (e.g. !*.json) would match them again.
+# =============================================================================
+# .env                   # secrets, API keys, passwords
+# .env.*
+# *.key
+# *.pem
+# *.secret
+# credentials.json
+
+# =============================================================================
+# Allow Git to traverse into all directories (this is essential!)
+# Without this, * would also block directory traversal and git would never
+# descend into subdirectories to find re-included files.
+# Note: re-includes ALL directories (including hidden ones like .claude/).
+# Files inside are still ignored unless they match a re-include rule below.
+# =============================================================================
+!*/
+
+# =============================================================================
+# Re-include file types tracked everywhere (applies recursively to all dirs).
+# Order matters — later rules override earlier ones within this file.
+# =============================================================================
+!*.md
+request-*.md
+report-*.md
+audit_*.md
+!*.json
+!*.conf
+!*.sh
+!*.py
+!*.txt
+# Matches .bashrc/.bash_aliases themselves and names ending in them (e.g. my.bashrc)
+!*.bash_aliases
+!*.bashrc
+!*.bats
+!*.bash
+!.editorconfig
+
+# Specific files without an extension (glob patterns above won't match these)
+!bash_aliases
+
+# Always track .gitignore itself so ignore rules are version-controlled
+!.gitignore
+
+# Always track .gitattributes to prevent CRLF line endings
+!.gitattributes
+
+# =============================================================================
+# Explicitly ignored directories
+# These must appear AFTER !*/ above to override the traversal re-include.
+# =============================================================================
+# Ignore directories named 99_Archive at any depth in this repository.
+99_Archive/
+
+# =============================================================================
+# Explicitly tracked files
+# Use these to re-include specific files by name — overrides the * deny rule.
+# Useful for files that don't match any extension rule above, or to document
+# intentional exceptions clearly.
+#
+# Wildcard patterns:
+#   *        matches any string of characters (excluding /)
+#   ?        matches any single character
+#   [abc]    matches any one of the characters listed
+#
+# Examples:
+#   !request-apt.md          # exact filename match
+#   !*.log                   # all files with .log extension
+#   !config.*                # any file named config with any extension
+#   !*-template*             # any file whose name contains -template
+#   !report-????-??.md       # e.g. report-2026-04.md (fixed-length date pattern)
+# =============================================================================
+
+# =============================================================================
+# Never track — secrets and personal settings
+# Keep this section LAST so it overrides every re-include rule above.
+# =============================================================================
+.env
+.env.*
+*.key
+*.pem
+*.secret
+credentials.json
+.claude/settings.local.json

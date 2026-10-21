@@ -189,6 +189,71 @@ You can now use telnet or a remote script to connect to port 9000 from across th
 
 If you want to forward traffic but also want a transparent peek at exactly what bytes are traveling through the stream, use the SYSTEM address type paired with tee:
 
+
+# Guide: Consolidating Multiple Multicast Streams into One Unicast UDP Stream
+
+When you need to collect data from multiple multicast groups (e.g., from 5 different source devices) and forward everything to a single unicast UDP destination, the implementation strategy depends entirely on the nature of the data payload. 
+
+Because UDP is connectionless and packet-based, you can either merge raw packet streams at the socket level using `socat` or mux them structurally using media tools. This guide details both approaches.
+
+---
+
+## 1. Approach A: Raw Packet Aggregation (For Logs, Telemetry, and Metrics)
+
+If your 5 source devices are transmitting independent, self-contained data packets—such as text logs, JSON metrics, SNMP traps, or custom binary telemetry—you can use a single `socat` instance to subscribe to all groups simultaneously.
+
+`socat` allows you to stack multiple `ip-add-membership` flags within a single socket definition.
+
+### The Command
+```bash
+socat -b 65536 \
+  UDP4-RECVFROM:1234,ip-add-membership=239.1.1.1:0.0.0.0,ip-add-membership=239.1.1.2:0.0.0.0,ip-add-membership=239.1.1.3:0.0.0.0,ip-add-membership=239.1.1.4:0.0.0.0,ip-add-membership=239.1.1.5:0.0.0.0,fork \
+  UDP4-SENDTO:192.168.1.50:5678
+```
+
+### Critical Operational Dynamics
+* **Interleaving:** `socat` will grab packets from the kernel socket buffer exactly as they arrive from the network interface card (NIC) and push them sequentially to the destination.
+* **Source IP Masking:** Once forwarded, all outgoing unicast packets will carry the source IP address of your **relay machine**, not the original 5 devices. The receiving application must rely on data embedded *inside* the payload (like a unique device ID or MAC address field) to distinguish which device sent what packet.
+* **Performance:** Ensure you use the performance tuning metrics from the main guide (`-b 65536` and high `rcvbuf` values) because the aggregate throughput of 5 combined devices can easily overflow default OS socket buffers.
+
+---
+
+## 2. Approach B: Multiplexing via MPEG-TS (For Live Video and Audio Feeds)
+
+**Warning:** Do not use the raw `socat` packet aggregation method for video streams (like IPTV feeds or IP camera RTSP/UDP streams). Interleaving raw video transport packets from different sources into a single stream completely destroys the stream architecture, rendering it unreadable by video decoders.
+
+Instead, you must structurally multiplex the individual streams into a **Multi-Program Transport Stream (MPTS)** using a tool like **FFmpeg**.
+
+### Installation
+Ensure FFmpeg is installed on your relay node:
+```bash
+sudo apt install ffmpeg      # Debian/Ubuntu
+sudo dnf install ffmpeg      # RHEL
+```
+
+### The Command
+```bash
+ffmpeg \
+  -i udp://239.1.1.1:1234 \
+  -i udp://239.1.1.2:1234 \
+  -i udp://239.1.1.3:1234 \
+  -i udp://239.1.1.4:1234 \
+  -i udp://239.1.1.5:1234 \
+  -map 0:v -map 0:a -map 1:v -map 1:a -map 2:v -map 2:a -map 3:v -map 3:a -map 4:v -map 4:a \
+  -c copy \
+  -f mpegts \
+  udp://192.168.1.50:5678
+```
+
+### Breakdown of the Syntax
+* **`-i udp://...`**: Registers all 5 unique multicast inputs.
+* **`-map X:v -map X:a`**: Explicitly maps the video (`v`) and audio (`a`) tracks from each individual input (`0` through `4`) into the final container output.
+* **`-c copy`**: **Crucial for performance.** This tells FFmpeg to copy the raw underlying codec data blocks exactly as they are without re-encoding them. This process uses minimal CPU cycles and maintains zero latency or quality loss.
+* **`-f mpegts`**: Combines all mapped inputs into a single Multi-Program Transport Stream payload format and passes it over unicast UDP.
+
+### The Receiver Experience
+When the target node (`192.168.1.50:5678`) opens the resulting stream in a media player like VLC or a hardware decoder, it won't see a corrupted mess. Instead, it will recognize **one single stream containing 5 selectable channels/programs**. The user or receiving software can cleanly toggle between the feeds via standard program maps.
+
 ```bash
 socat UDP4-RECVFROM:1234,fork SYSTEM:"tee -a /tmp/traffic.log | socat - UDP4-SENDTO:192.168.1.50:5678"
 ```

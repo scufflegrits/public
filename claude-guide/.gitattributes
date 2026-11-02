@@ -1,0 +1,17 @@
+# Normalize line endings: LF in the repo and on checkout (guides are LF per workspace convention)
+* text=auto eol=lf
+
+# Documentation / text
+*.md   text eol=lf diff=markdown
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.mmd  text eol=lf
+*.sh   text eol=lf
+
+# Binary assets
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.pdf  binary

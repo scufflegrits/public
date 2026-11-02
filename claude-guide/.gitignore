@@ -1,0 +1,30 @@
+# Request files (scratch prompts/requests) — not tracked
+request*
+request-*
+
+# Retired content (see parent workspace convention)
+99_Archive/
+
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+*.secret
+credentials.json
+
+# Local Claude Code state (keep shared CLAUDE.md and .claude/settings.json)
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Editor / OS noise
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Generated render output
+*.mmd.svg
+*.mmd.png

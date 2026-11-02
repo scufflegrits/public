@@ -1,0 +1,60 @@
+{
+  "source_url": "https://www.cisco.com/c/dam/en/us/td/docs/Website/enterprise/catalyst_center_compatibility_matrix/resources/data-min.json",
+  "accessed": "2026-10-31 UTC",
+  "json_sha256": "35d8b897d9deaf6512e5db3117ea501e093814790edb9f799bc3253eaeb854a5",
+  "selector": "DNAC  Compatibility Matrix / 2.3.7.11 / Router / Platform containing named PID",
+  "warning": "Parsed JSON as data; no downloaded JavaScript executed. Train granularity; ISR row includes releases beyond its documented ceiling.",
+  "rows": {
+    "Cisco 4000 Series Integrated Services Routers": [
+      {
+        "Compatible Releases": "IOS XE 17.18.x,IOS XE 17.15.x,IOS XE 17.14.x,IOS XE 17.13.x,IOS XE 17.12.x,IOS XE 17.9.x,IOS XE 17.6.x,IOS XE 17.3.x,IOS XE 16.12.x",
+        "Platform": "ISR 4431",
+        "Cisco DNA Essentials License": "Y",
+        "Cisco DNA Advantage License": "Y",
+        "Inventory": "Y",
+        "Topology": "Y",
+        "SWIM": "Y",
+        "PNP": "Y",
+        "Cisco DNA Assurance": "Y",
+        "Application Policy": "Y",
+        "Patching (SMU)": "Y",
+        "IWAN": "Y",
+        "Cisco SD-Access": "Y"
+      }
+    ],
+    "Cisco Catalyst 8300 Series Edge Platforms": [
+      {
+        "Compatible Releases": "IOS XE 17.18.x,IOS XE 17.15.x,IOS XE 17.14.x,IOS XE 17.13.x,IOS XE 17.12.x,IOS XE 17.9.x,IOS XE 17.6.x,IOS XE 17.3.x",
+        "Platform": "C8300-1N1S-4T2X ,  C8300-1N1S-6T",
+        "Cisco DNA Essentials License": "Y",
+        "Cisco DNA Advantage License": "Y",
+        "Inventory": "Y",
+        "Topology": "Y",
+        "SWIM": "Y",
+        "PNP": "Y",
+        "Cisco DNA Assurance": "Y",
+        "Application Policy": "Y",
+        "Patching (SMU)": "Y",
+        "IWAN": "NA",
+        "Cisco SD-Access": "Y"
+      }
+    ],
+    "Cisco 8300 Series Secure Router": [
+      {
+        "Compatible Releases": "IOS XE 17.18.x,IOS XE 17.15.x",
+        "Platform": "C8375-E-G2",
+        "Cisco DNA Essentials License": "N",
+        "Cisco DNA Advantage License": "N",
+        "Inventory": "Y",
+        "Topology": "Y",
+        "SWIM": "Y",
+        "PNP": "Y",
+        "Cisco DNA Assurance": "Y",
+        "Application Policy": "NA",
+        "Patching (SMU)": "Y",
+        "IWAN": "Y",
+        "Cisco SD-Access": "Y"
+      }
+    ]
+  }
+}

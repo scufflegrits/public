@@ -1,0 +1,99 @@
+Derived text: Cisco DNA Software SD-WAN and Routing Matrices
+Source: https://www.cisco.com/c/m/en_us/products/software/sd-wan-routing-matrix.html
+Read 2026-10-30 with headless Chromium (Playwright 1.64): tick = <img .../blue_tick.png> in a tier cell;
+feature list per category = the page's tooltip text. Y = ticked, - = not ticked, fnN = footnote N.
+
+
+## Cisco DNA for SD-WAN subscription features :: Cisco DNA Essentials | CIsco DNA Advantage
+Connectivity and management [Y fnVPNs limited to 10 user + 1 mgmt | Y] :: Cloud or on-premises management, flexible topology including hub/spoke, full mesh and partial mesh, app- and SLA-based routing policy, VNF lifecycle management, DSL, 4G LTE, and multilink router interfaces, NTP client, zero-touch provisioning and onboarding, global and site topology.
+Cisco Catalyst SD-WAN Layer 2 and Layer 3 routing – general [Y | Y] :: Static and dynamic routing (BGP, OSPF), routing protocol redistribution (EIGRP, OSPF, BGP), EIGRP (service side), route maps, BFD PMTU, CoS marking (802.1P), static and service side NAT, NAT pool support for DIA, NAT using loopback interface address, HQoS, per-tunnel QoS, Ethernet subinterface QoS, WAN loopback support, OMP redistribution, service VPN redistribution, mapping BGP communities to OMP tags, match and set communities during BGP to OMP redistribution (localized and centralized policy), secondary IP address support on SVI (interface VLAN), TLOC extension, DHCP options support, BFD for BGP/OSPF/EIGRP - CLI template, NTP server support, DIA Tracker: Interface tracker for DIA, ability to track static route on service VPN, per-class/DSCP BFD for AAR, ACL matching ICMP, enhanced policy-based routing (CLI template), jumbo frames (1GE interface), custom app support (for application aware routing), SD-AVC, flexible Netflow, EVPN, MACSec Support, automated service chaining and insertion, Layer 2 VPN.
+Cisco Catalyst SD-WAN Layer 2 and Layer 3 routing – IPv6 [Y | Y] :: Dual stack support (for transport), inbound and outbound filtering, support for NAT64 devices (DIA), dual-stack service-side interface support (Gigabit, subinterface, SVI, loopback), unicast addressing (link-local, unique-local, and global), anycast addressing, QoS, QoS policer, QoS DSCP rewrite (inbound and outbound), IP name server, ICMP redirects, VRRP, DHCP relay agent, SSH, traceroute, SNMP logging server, automated service chaining and insertion.
+Multicloud and SaaS [Y | Y] :: Cloud OnRamp for Multicloud (GCP, AWS, Azure) – Site to Cloud connectivity, Cloud OnRamp for SaaS, monitoring capabilities for Multicloud and SaaS via Cisco Catalyst SD-WAN Manager, SD-WAN Application Intelligence Engine (SAIE), automated service chaining and insertion.
+SSE Connectivity [Y | Y] :: 3rd party cloud security providers, Cisco Catalyst SD-WAN auto-register and IPsec auto-tunnel to Cisco Umbrella®, Cisco Umbrella DNS monitoring (visibility only), Cisco Umbrella app discovery.
+NGFW Stack [Y | Y] :: Cisco Advanced Malware Protection, geo location-based filtering, interface zone support, high speed logging, Firewall HA, URL filtering, TLS/SSL proxy support with Cisco Catalyst SD-WAN, FQDN support, enterprise certificate support, ACL, pairwise key support for IPsec, SSH login with key, syslog over TLS, enterprise firewall with Talos® powered IPS and application controls, RADIUS, Micro and Micro Segmentation (ISE/SGT).
+Cisco Catalyst SD-WAN services [Y | Y] :: DNS (including local bypass), basic path optimization with FEC and packet duplication, AppQoE: TCP optimization, L3-L7 Firewall – multiple prefix list, rule-set support, microtenancy: RBAC by VPN, policy based routing to SIG, weighted load-balancing for multiple SIG tunnels.
+Essential Voice/UC features (managed via Cisco Catalyst Manager) [Y | Y] :: CUBE (IP to IP).
+Software Support Service (SWSS) [Y fn2 | Y fn2] :: Software support services that also offer license portability and ongoing innovation in the subscription software stack, including 24-hour TAC support.
+Premium Support Services [Optional2 | Optional2] :: Success Tracks and/or Solution Support.
+Advanced Cisco Catalyst SD-WAN Layer 2 and Layer 3 routing – general [- | Y] :: Per-VPN QoS, adaptive QOS support, dynamic on-demand tunnel support, Hierarchical Cisco Catalyst SD-WAN, automated service chaining and insertion - service creation/discovery.
+Cisco Catalyst SD-WAN Layer 2 and Layer 3 Multicast routing – IPv4 [- | Y] :: IGMPv3, PIM SSM, auto RP, app-aware routing policy support for multicast.
+Advanced NGFW Stack [- | Y fn4] :: Cisco Secure Malware Analytics support4.
+Advanced Cisco Catalyst SD-WAN services [- | Y] :: Cisco Catalyst SD-WAN Manager (design, deploy, monitor) for virtualized platforms, AppQoE – multiple service nodes, DRE and LZ (including SSL proxy).
+Advanced Multicloud and SaaS, Analytics, and Visibility [- | Y] :: Cloud OnRamp for SaaS with Cisco Catalyst SD-WAN Analytics3 and telemetry, Cloud OnRamp for Multicloud – Site to Site and Cloud to Cloud connectivity via mid-mile with Cloud Interconnect/Cloud Backbone, M365 Informed Network Routing, Webex telemetry, automated service chaining and insertion - service creation/discovery, Cloud OnRamp for Colocation, Cisco Catalyst SD-WAN Analytics3, Predictive Path Recommendations (powered by ThousandEyes WAN Insights).
+Cross-domain innovations [- | Y] :: Integrated border for campus (SD-Access), integration with Cisco ACI® for application SLA.
+Advanced Voice/UC features (Managed via Cisco Catalyst Manager) [- | Y] :: Non-secure TDM/PSTN SIP trunk with digital cards (T1/E1) and analog cards (FXO/FXS), non-secure DSP farm services (media termination point, transcoder and conference bridge), SIP SRST4.
+Roaming User Protection [- | Y] :: Cisco AnyConnect® protects your employees even when they are off the VPN. Enjoy seamless protection against malware, phishing, and command-and-control callbacks wherever your users go.
+Layer 2 and Layer 3 routing [Y | Y] :: RIP, OSPF, BGP, EIGRP, IS-IS, IGRP (routing protocols), On-Demand Routing (ODR), NSF awareness, Point-to-Point Protocol (PPP), Multi-Link PPP (MLP), EVPN, Segment Routing.
+Essential router capabilities [Y | Y] :: NetFlow, Flexible NetFlow (FnF), IPFIX, performance monitoring, Flexible Packet Matching (FPM), Bidirectional Forwarding (BFD), LLDP, ACL, ARP, DHCP, BDI, Cisco Discovery Protocol, Control Plane Policing (CoPP), NAT, DNS, Dynamic DNS, NTPv4, TR-069, TR069-CWMP, TCP-ECN, Window, MSS, etc., Stream Control Transmission Protocol (SCTP), 802.1P, 802.1Q, LACP, PAgP, EtherChannel, box-to-box HA, FHRP, GLBP (global load balancing), NAT, PAT – IPv4/v6, Reverse Path Forwarding (URPF), Switch Port Analyzer (SPAN), Encapsulated Remote SPAN (ERSPAN), Connectivity Fault Management (CFM-802.1ag), carrier grade NAT4.
+Programmability and device management [Y | Y] :: NETCONF/YANG support, Zero Touch Support (PnP/ZTP), EEM Support, RESTCONF, TACACS+, AAA, GNMI, gRPC.
+Essential security capabilities [Y | Y] :: Zone-based firewall, IPS/Snort, Public Key Infrastructure (PKI), ACL, trustworthy system, Challenge Handshake (CHAP) and Password Authentication (PAP), Certificate Authority (CA).
+MACsec support [Y | Y] :: MACsec Key Agreement Protocol, LAN MACsec (128-bit), WAN MACSec (128-/256-bit).
+VPN support [Y fn3 | Y fn3] :: IPsec (point to point), DMVPN, GET VPN, FlexVPN.
+Essential Application Experience [Y | Y] :: MQC including classification, policing, re-marking, scheduling; HQoS, Application Visibility and Control (AVC/SD-AVC), NBAR2 (standard protocol packs), IPSLA (Initiator), Deep Packet Inspection, Policy-Based Routing (PBR).
+Essential multicast features [Y | Y] :: Bi-Di PIM, IGMP, Protocol Independent Multicast (PIM), mVPN, CGMP, AutoRP, Bootstrap Router (BSR), mroute, MLD (v1, v2), extending SSM support (PIM-SSM, IGMPv3 with SSM), SSM-Mapping, Multicast Source Discovery Protocol (MSDP).
+Essential Metro, Carrier Ethernet, and Broadband Support [Y | Y] :: PPP over Ethernet (PPPoE), PPPoA (PPP over ATM) for DSL support, L2TPv2.
+
+## Platform based routing features (Most features included with the perpetual network stack) :: Catalyst Routing Essentials | CIsco DNA Essentials | Cisco DNA Advantage
+Routing and protocols [Y | Y | Y] :: RIP, OSPF, BGP, EIGRP, IGRP, IS-IS, On-Demand Routing (ODR), Point-to-Point Protocol (PPP), Multi-Link PPP (MLP), TR-069, TR069-CWMP, TCP (ECN, Window scaling, MSS) Stream Control Transmission Protocol (SCTP).
+Link capabilities [Y | Y | Y] :: LACP, PAgP, EtherChannel, LLDP, 802.1Q.
+High availability [Y | Y | Y] :: Stateful interchassis redundancy.
+Essential application experience [Y | Y | Y] :: IPSLA initiator/responder, echo, jitter, path (ICMP, UDP, and multicast), TCP connect, HTTP, FTP, DHCP, MQC including classification, policing, re-marking, scheduling; HQoS, NBAR2 (standard protocol packs).
+System control capabilities [Y | Y | Y] :: DNS, Dynamic DNS, NTPv4, Cisco Discovery Protocol, Control Plane Policing (CoPP).
+Essential traffic management capabilities [Y | Y | Y] :: NetFlow, Flexible NetFlow (FNF), IPFIX, performance monitoring, Flexible Packet Matching (FPM), Policy-Based Routing (PBR), ACL, ARP, DHCP, BDI, NAT, PAT – IPv4/v6, Reverse Path Forwarding (URPF), 802.1P.
+Traffic analytics capabilities [Y | Y | Y] :: Encapsulated Remote SPAN (ERSPAN).
+Programmability and device management [Y | Y | Y] :: NETCONF/YANG support, Zero Touch Support (PnP/ZTP), EEM Support, RESTCONF, TACACS+, AAA, GNMI, gRPC.
+Secure authentication [Y | Y | Y] :: Public Key Infrastructure (PKI), Challenge Handshake (CHAP) and Password Authentication (PAP), Certificate Authority (CA).
+Perimeter security [Y | Y | Y] :: L3-L7 firewall, ACL.
+Secure infrastructure [Y | Y | Y] :: IPsec (point to point).
+Platform integrity [Y | Y | Y] :: Trustworthy system.
+Essential multicast features [Y | Y | Y] :: Bi-Di PIM, IGMP, Protocol Independent Multicast (PIM), mVPN, CGMP, AutoRP, Bootstrap Router (BSR), mroute, MLD (v1, v2), extending SSM support (PIM-SSM, IGMPv3 with SSM), SSM-Mapping, Multicast Source Discovery Protocol (MSDP).
+Essential broadband CPE support [Y | Y | Y] :: PPP over Ethernet (PPPoE), PPPoA (PPP over ATM) for DSL support, L2TPv2.
+Essential tunneling mechanisms [Y | Y | Y] :: GRE tunnel, IPv6 over v4 and IPv4 over v6 tunnels, per-tunnel QoS.
+Network segmentation [Y | Y | Y] :: Easy Virtual Network (EVN), vRF-Lite, Multi-VRF, VRF support, Cisco TrustSec® (SGT, SGACL, SGX).
+802.1X/AAA support [Y | Y | Y] :: 802.1X feature support, RADIUS integration, TACACS/TACACS+ support, SHA-1, SHA-2, MD5.
+Essential routing and traffic management capabilities [Y | Y | Y] :: Connectivity Fault Management (CFM-802.1ag), Operations and Admin Management (OAM - 802.3ah), E-OAM (op, admin, maint), E-CFM (connectivity fault management).
+MACsec support [- | Y | Y] :: MACsec Key Agreement Protocol, LAN MACsec (128-bit), WAN MACSec (128-/256-bit).
+Threat protection [- | Y | Y] :: IPS/IDS, Cisco AMP3, URL Filtering3.
+Secure infrastructure (VPN) [- | Y fn1 | Y fn1] :: DMVPN, GET VPN, FlexVPN.
+Essential Voice/UC features (managed via Cisco Catalyst Center) [- | Y | Y] :: CUBE (IP to IP). CUBE HA
+Advanced Routing Capabilities [- | Y | Y] :: Bidirectional Forwarding (BFD).
+Advanced Traffic Management Capabilities [- | - | Y] :: Carrier grade NAT.
+Operational/management router capabilities [- | - | Y] :: Unidirectional Link Routing (UDLR), guest shell support, application hosting (app hosting on containers).
+High availability [- | - | Y] :: Stateful interchassis redundancy.
+Traffic analytics capabilities [- | - | Y] :: Encapsulated Remote SPAN (ERSPAN).
+Advanced application experience [- | - | Y] :: Application Layer Gateway (ALG), NBAR2 (standard and custom protocol packs), Application Visibility and Control (SD-AVC).
+Legacy protocol support [- | - | Y] :: ISDN BRI, X.25 and XOT support, basic CLNS functionality.
+Mobile routing [- | - | Y] :: Radio-Aware Routing (RAR, PPPoE based-RFC 5578), mobile IP, Proxy Mobile IP (PMIP), network positioning system.
+Advanced multicast features [- | - | Y] :: Multicast Segment Routing, Pragmatic General Multicast (PGM), Router Group Management Protocol (RGMP), multicast service reflection, multicast VPN.
+Advanced metro and carrier Ethernet support [- | - | Y] :: Ethernet local management Interface (ELMI), Ethernet Virtual Circuit (EVC), Ethernet flow point.
+Advanced MPLS and VRF support [- | - | Y] :: MPLS Layer 2 and Layer 3 VPN, Layer 2 VPN Pseudowire (PW), Ethernet over MPLS (EoMPLS), Any Transport over MPLS (AToM), MPLS Traffic Engineering (TE), Label Distribution Protocol (LDP), Virtual Private LAN Services(VPLS, H-VPLS), EVPN, Segment Routing.
+Advanced tunneling mechanisms [- | - | Y] :: ISATAP tunnels, 6RD tunnels, Layer 2 Tunnel Protocol v3 (L2TPv3)2, LAC2, LNS2, Layer 2 Protocol Tunneling (L2PT), Virtual Private Data Networks (VPDN)2, Layer 2 forwarding, Ethernet over GRE (EoGRE)2.
+Advanced IP service-level analysis [- | - | Y] :: VoIP (UDP jitter, RTP, H323, MOS), video ops, TWAMP, monitor, schedule, disc (for LSP), Y.1731, MPLS OAM.
+Content routing [- | - | Y] :: Web Cache Routing Protocol (WCCP), object tracking.
+Data center interconnect features [- | - | Y] :: Overlay Transport Virtualization (OTV), VRF-Aware Software Infrastructure (VASI), VXLAN.
+Advanced Voice/UC features (managed via Cisco Catalyst Center) [- | - | Y] :: Analog cards (FXO/FXS/BRI/E&M) and digital cards (E1/T1), call control (SIP, SIP line “WxC and CUCM”, STCAPP, MGCP), DSP farm services (media termination point, transcoder and conference), SRST, CME.
+Cisco innovation [- | - | Y] :: Encrypted Traffic Analytics (ETA), Cisco SD Bonjour (mDNS), Embedded Packet Capture (EPC), Software Maintenance Upgrade (SMU), Locator ID Separator ID (LISP).
+
+## Cisco Catalyst SD-WAN Manager (SD-Routing) features (All features require an active Catalyst Routing or Cisco DNA subscription) :: Catalyst Routing Essentials | CIsco DNA Essentials | Cisco DNA Advantage
+Device management [Y | Y | Y] :: Zero touch provisioning through Cisco Plug and play, guided workflow for quick connect, Inventory, discovery, topology, software image management, site management, network settings, credential update, integrity verification, predefined reports.
+Monitoring - Network [Y | Y | Y] :: Dashboards, overall health, network health, site health, topology, pre-canned reports, troubleshooting tools such as ping, traceroute, speed test, packet capture and Network-wide Path Insights (NWPI).
+Monitoring - Applications [Y | Y | Y] :: Application visibility (name, throughput).
+Configuration management [Y | Y | Y] :: Guided workflows for configuration management and CLI templates.
+Software Support Service (SWSS) [Y fn1 | Y fn1 | Y fn1] :: Software support services that also offer license portability and ongoing innovation in the subscription software stack, including 24-hour TAC support.
+Premium Support Services [Optional1 | Optional1 | Optional1] :: Success Tracks and/or Solution Support.
+Advanced monitoring and management [- | Y | Y] :: Guided workflow for NGFW (on-box security), Configuration support for DMVPN, GET VPN, FlexVPN.
+Cloud OnRamp [- | Y | Y] :: BranchConnect for AWS, BranchConnect for Azure.
+Security [- | Y | Y] :: Management for advanced NGFW and integration with cloud security (SSE).
+
+## Cisco Catalyst Center features (All features require an active Catalyst Routing or Cisco DNA subscription) :: Catalyst Routing Essentials | CIsco DNA Essentials | Cisco DNA Advantage
+Essential Cisco DNA automation – Device management [Y | Y | Y] :: Inventory, discovery, topology, software image management, site management, network settings, credential update, integrity verification, template programmer, predefined reports, Plug and Play application.
+Cisco DNA assurance – Management and analytics [Y | Y | Y] :: Dashboards, overall health, network health, client health, topology, pre-canned reports, custom thresholds.
+Essential Cisco DNA assurance – Routing and VNF management [Y | Y | Y] :: Basic router monitoring, basic WAAS monitoring, basic ENFV monitoring (ENCS, UCSE, vRouter, vWAAS).
+Essential Cisco DNA assurance [Y | Y | Y] :: Application visibility (name, throughput).
+Software Support Service (SWSS) [Y fn1 | Y fn1 | Y fn1] :: Software support services that also offer license portability and ongoing innovation in the subscription software stack, including 24-hour TAC support.
+Premium Support Services [Optional1 | Optional1 | Optional1] :: Success Tracks and/or Solution Support.
+Essential Cisco DNA automation – Routing and VNF management [- | Y | Y] :: Router deployment: day-0 and day-2 changes, NFV provisioning on ENCS and Cisco UCS® E-Series, Cisco VNF – ISRv, vASA.
+Advanced Cisco DNA automation – Device management [- | - | Y] :: Advanced Cisco DNA Automation – device management.
+Advanced Cisco DNA automation – Routing and VNF management [- | - | Y] :: IWAN application, security at the edge, VNF management (third party and applications).
+Advanced Cisco DNA assurance – Routing and VNF management [- | - | Y] :: 360 pages, health score, time travel, targeted insights, neighbor topology, path trace, KPIs, baselining, trends, custom reports (AppX, SD-Access, Wi-Fi KPIs, etc.), compliance, global insights integrations (Cisco® Unified Communications Manager, Skype for Business, ETA/SW, Tableau, etc.), router 360, ENFV 360, router underlay insights, ENFV insights.
+Advanced Cisco DNA assurance – Application [- | - | Y] :: App health (router, switch, NAM based), app 360, app performance in client/device 360s (jitter, loss, latency).

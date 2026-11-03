@@ -1,7 +1,6 @@
 ---
 title: Subagents
 section: 4
-tone: mix
 status: reviewed
 audience: system engineers new to Claude Code
 description: Isolation, custom agents, and when to use subagents
@@ -11,8 +10,6 @@ description: Isolation, custom agents, and when to use subagents
 
 *Part of the Claude Code Guide*\
 Previous: [Built-in Agents](02-built-in-agents.md) | Next: [Skills](04-skills.md)
-
-**Tone**: Mix
 
 Subagents are isolated workers that Claude can spawn to handle side tasks. They run in their own context window and return only a summary to the main conversation.
 

@@ -1,7 +1,6 @@
 ---
 title: Getting Oriented
 section: 1-2
-tone: mix
 status: reviewed
 audience: system engineers new to Claude Code
 description: Foundations and core concepts
@@ -11,8 +10,6 @@ description: Foundations and core concepts
 
 *Part of the Claude Code Guide*\
 Previous: [README](00-README.md) | Next: [Built-in Agents](02-built-in-agents.md)
-
-**Tone**: Mix
 
 ## 1.1 What Claude Code is
 

@@ -1,7 +1,6 @@
 ---
 title: Built-in Agents
 section: 3
-tone: mix
 status: reviewed
 audience: system engineers new to Claude Code
 description: Explore, Plan, General-purpose, and agent selection
@@ -11,8 +10,6 @@ description: Explore, Plan, General-purpose, and agent selection
 
 *Part of the Claude Code Guide*\
 Previous: [Getting Oriented](01-getting-oriented.md) | Next: [Subagents](03-subagents.md)
-
-**Tone**: Mix
 
 Claude Code ships with several built-in agents. The three you will encounter most often are Explore, Plan, and General-purpose. Understanding when Claude chooses each one helps you predict behavior and steer it when needed. The full built-in list also includes `claude` (a catch-all), `statusline-setup`, and `claude-code-guide` (see 3.6).
 

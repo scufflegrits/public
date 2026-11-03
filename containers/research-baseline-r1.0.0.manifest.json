@@ -1,0 +1,396 @@
+{
+  "baseline_revision": "r1.0.0 (preservation bookkeeping only; unversioned files)",
+  "working_revision": "r1.0.1",
+  "research_cutoff": "2026-10-30",
+  "review_date": "2026-10-30",
+  "review_mode": "historical verification at the 2026-10-30 cutoff",
+  "created_utc": "2026-10-31T00:32:59+00:00",
+  "copies": [
+    {
+      "source": "research-vmware.md",
+      "copy": "research-vmware-r1.0.1.md",
+      "bytes": 63828,
+      "sha256": "acb2e1f8c37f934f030d5f7a80498943fe8ba11ffd9ac309dacab1e1416aa61e",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-proxmox.md",
+      "copy": "research-proxmox-r1.0.1.md",
+      "bytes": 75464,
+      "sha256": "afed9fd09e904f20bd91c6a7b73762061ba419abc8938823465142c3f9999670",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-rhel.md",
+      "copy": "research-rhel-r1.0.1.md",
+      "bytes": 87093,
+      "sha256": "99b5939704ce1d0b011d58ca53441f1dcd46c33486d665511d90a9aa45fb81e2",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-vm-comparison.md",
+      "copy": "research-vm-comparison-r1.0.1.md",
+      "bytes": 61720,
+      "sha256": "7507c828b91cae861ca823db60109ae876238d8a90b18a951bfe76f729134a6e",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-progress.md",
+      "copy": "research-progress-r1.0.1.md",
+      "bytes": 10476,
+      "sha256": "0035426fb59e462acac52a57e0c8700bcb69858ced4b0d947c1d1b6dbde47d61",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "TODO.md",
+      "copy": "TODO-r1.0.1.md",
+      "bytes": 4286,
+      "sha256": "b6d7212ff80b997bf15c19a7e611ed662247feff3c43dae9f10c14d413c1ec35",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-verification.md",
+      "copy": "research-verification-r1.0.1.md",
+      "bytes": 5387,
+      "sha256": "8c3a74521d6f0d2ace8381dc64506134a3c8ac473bcb60bf12d902459db17541",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-verification.json",
+      "copy": "research-verification-r1.0.1.json",
+      "bytes": 13681,
+      "sha256": "76ecc4b48e24b0fe64d7ad74f565be36fadb5fb20f3b377e5223295efb530ec5",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-link-checks.tsv",
+      "copy": "research-link-checks-r1.0.1.tsv",
+      "bytes": 32343,
+      "sha256": "447e1bdd9261412e96254127dd31b35b73d55adf547e4579fdb3ac73018b5407",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-audit.py",
+      "copy": "research-audit-r1.0.1.py",
+      "bytes": 5315,
+      "sha256": "364dd998545c981e77abcbe26dd2c0bab9bb5bd422fda3389003b0606dac2b4a",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "research-markdownlint.json",
+      "copy": "research-markdownlint-r1.0.1.json",
+      "bytes": 118,
+      "sha256": "8b7a643e0bdf7fc40c385dd56d42fe582f73a1baac78ba850423304e3f1dbec6",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "blocked.md",
+      "copy": "blocked-r1.0.1.md",
+      "bytes": 5269,
+      "sha256": "66e140c61d358783245a9fec00b3532d5597e911fa92c5299aef18995f29c27f",
+      "copy_sha256_verified": true
+    },
+    {
+      "source": "packages.md",
+      "copy": "packages-r1.0.1.md",
+      "bytes": 30093,
+      "sha256": "75c0e82001b846b9bc74874ad063c5ddfafd7b75e97fc5906fba7b5271c1f026",
+      "copy_sha256_verified": true
+    }
+  ],
+  "unchanged_inputs": [
+    {
+      "path": "request-container-comparison.md",
+      "bytes": 1311,
+      "sha256": "1478a40fd4b031a22b0560cf66a3032c4172c3584d14e201bfc8e0175ac38b10"
+    },
+    {
+      "path": "request-container-comparison-r1.0.1.md",
+      "bytes": 29650,
+      "sha256": "1a6a644fbaf5f7ec061e06eac63de79d9a84292d4109ad806fa23538b87576ed"
+    },
+    {
+      "path": "request-container-comparison-r1.0.2.md",
+      "bytes": 27694,
+      "sha256": "46452d5430f958386dff61cfbcbe6f8d1f2ede84bf7d811b31c3c650e6b40da0"
+    },
+    {
+      "path": "prompt.md",
+      "bytes": 18146,
+      "sha256": "c03cab7fb973d81e8b64b67781734a441b0a278dac7108f26394d74bce3dbc60"
+    },
+    {
+      "path": "review-handoff-r1.0.0.md",
+      "bytes": 18527,
+      "sha256": "48ce8d8eaafb340dacc3af62fd67b58daee0342630ac57cc408565e961d4b536"
+    },
+    {
+      "path": "package.json",
+      "bytes": 59,
+      "sha256": "23b5f43192fe46cb286f55cd68edb576c011816dcbf48432dcbbfdc22b4ba5d3"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 1110,
+      "sha256": "4210b3db3734ebe2ea21dc9dca4c02cacabf010eb8e254b4f28f14aa2a645e90"
+    }
+  ],
+  "reference_files": [
+    {
+      "path": "reference/proxmox-backup-4-2-datasheet.pdf",
+      "bytes": 1984097,
+      "sha256": "802523e0e03dc2a3e6a42349fc90458ddf234f047762684076496738730fb227"
+    },
+    {
+      "path": "reference/proxmox-backup-4-2-guide.pdf",
+      "bytes": 4448889,
+      "sha256": "0b53b762a961ecd11a8bc2a15a1bfb506ab8d1906068910d094feea816ed2b6f"
+    },
+    {
+      "path": "reference/proxmox-backup-4-2-release.pdf",
+      "bytes": 63418,
+      "sha256": "43eb552ccc08951a6e57ba4abc4e02069333817abbc5fa243f09019cf72f14ae"
+    },
+    {
+      "path": "reference/proxmox-backup-subscription-agreement-v2-5.pdf",
+      "bytes": 137744,
+      "sha256": "b5f4c114924efa8079c2ba5cd0a96019ca496dbaee084e375083c59ee1a4a2ed"
+    },
+    {
+      "path": "reference/proxmox-datacenter-manager-1-1-guide.pdf",
+      "bytes": 3245610,
+      "sha256": "17164e094d85ed31abfab29a14db92b952a9441f0e2565815777fe2e11e1aa8c"
+    },
+    {
+      "path": "reference/proxmox-offline-mirror-0-8-guide.pdf",
+      "bytes": 232893,
+      "sha256": "d07eb1a3ab1fd4a5a59f6114742a31b35ec208a34ce7de709a4cf1a56d05a4b2"
+    },
+    {
+      "path": "reference/proxmox-pdm-1-1-release.pdf",
+      "bytes": 78606,
+      "sha256": "5c68fb9ac46baf32368c695938fece07ec3511078c84e7587c24ccde7374a2a7"
+    },
+    {
+      "path": "reference/proxmox-ve-9-2-datasheet.pdf",
+      "bytes": 1042555,
+      "sha256": "804ec44a5ca5656c6b980366ccf0cba90fdb1b095b5f48a825ab461f7bbc58cf"
+    },
+    {
+      "path": "reference/proxmox-ve-9-2-release.pdf",
+      "bytes": 76135,
+      "sha256": "b1b8fc7ed95490aef1069d2eb46bb292c6b5711b4f1b5cd21c9ec3df5d493eb7"
+    },
+    {
+      "path": "reference/proxmox-ve-9-admin-guide.pdf",
+      "bytes": 6208268,
+      "sha256": "a828ca0e6a0f785a14f1e0cd28560b3be32bb88728525540f97de6469d650a73"
+    },
+    {
+      "path": "reference/proxmox-ve-arm64-release.pdf",
+      "bytes": 86270,
+      "sha256": "980e3dc0a8cdfb20f940284ea0a3238453495c40eac60f54efdb0b50cae43cb2"
+    },
+    {
+      "path": "reference/proxmox-ve-subscription-agreement-v4-5.pdf",
+      "bytes": 143683,
+      "sha256": "e83b7cccec8e7ba06c7dab47d00bb98cf418817ec2d45ef725b2051fbde69452"
+    },
+    {
+      "path": "reference/proxmox-veeam-backup-13-user-guide.pdf",
+      "bytes": 340755729,
+      "sha256": "bdfac6d4b72ae61ffdb78499dee0c0b482877c648c465e6f0433830260745aac"
+    },
+    {
+      "path": "reference/rhel-10-container-guide.pdf",
+      "bytes": 1026733,
+      "sha256": "87a2519ae43b54d48c844615c3f13b73d6a0e2b800231eea2ab343472ac29b60"
+    },
+    {
+      "path": "reference/rhel-10-high-availability.pdf",
+      "bytes": 1279387,
+      "sha256": "ae9425ebe3acc4b5892dc511a9832be3e8527389d3cce16a84d0778a78bc09a3"
+    },
+    {
+      "path": "reference/rhel-10-linux-virtual-machines.pdf",
+      "bytes": 2885965,
+      "sha256": "0ce63a1ffbcf1d1c59e826bff13fa77529a514600d26684e251acf7df1721fc3"
+    },
+    {
+      "path": "reference/rhel-10-networking.pdf",
+      "bytes": 2413103,
+      "sha256": "bc619fda5e757b14168f9af7859b07b1a89e58a8d615f24b82a893b5e4c04d04"
+    },
+    {
+      "path": "reference/rhel-10.2-release-notes.pdf",
+      "bytes": 1439332,
+      "sha256": "4c0f9118ba1e0e5778b06e6b9b729f1612e6880119c83bb06923dadab2dcf596"
+    },
+    {
+      "path": "reference/rhel-aap-2.7-whats-new.pdf",
+      "bytes": 7939480,
+      "sha256": "d18bd0a268ebfca730a5cdab614f38f6dc198c39922e2d5f80e9147235b37c14"
+    },
+    {
+      "path": "reference/rhel-microshift-4.22-networking.pdf",
+      "bytes": 788607,
+      "sha256": "346f3862790570396aab99c7671673ee9d7e5f743321bcc0c96132de2470ad41"
+    },
+    {
+      "path": "reference/rhel-mtv-2.12-planning.pdf",
+      "bytes": 1324494,
+      "sha256": "50f8d5ffe37f71ab021d748df9afc6d5cf7e822d1ae74fa27529436841244e75"
+    },
+    {
+      "path": "reference/rhel-odf-subscription-guide-202408.pdf",
+      "bytes": 238812,
+      "sha256": "0e85f87bb3268909ee26f2ed0b189ae85318f4ca9d956ec1140a2da0feae9907"
+    },
+    {
+      "path": "reference/rhel-openshift-4.22-hardware-networks.pdf",
+      "bytes": 1076670,
+      "sha256": "a78e8c38205b62f6f6303d6ca7c9fd36d8765fd50838ef2512c473e3ad6e8c58"
+    },
+    {
+      "path": "reference/rhel-openshift-4.22-ovn-kubernetes.pdf",
+      "bytes": 886560,
+      "sha256": "e419d31ac61ad7a1fc6503ea3d25ca7d02adbaf2aad025f0ca0d5a931bb8dc33"
+    },
+    {
+      "path": "reference/rhel-openshift-4.22-release-notes.pdf",
+      "bytes": 759366,
+      "sha256": "b92dabd1d592cd657bafc10049e17674a8f52006469ec467bfdf50d6a24e9696"
+    },
+    {
+      "path": "reference/rhel-openshift-4.22-virtualization.pdf",
+      "bytes": 4855160,
+      "sha256": "01145c75b418690c8af1790ce61d47cf29218768a36fe728ca8334228f4f3217"
+    },
+    {
+      "path": "reference/rhel-openshift-subscription-guide-202601.pdf",
+      "bytes": 559775,
+      "sha256": "8586ffce4ca3d7695dfb6bf8932e73f60cfe7ad549f87ca67b6f9789767be563"
+    },
+    {
+      "path": "reference/rhel-openshift-virtualization-architecture-guide.pdf",
+      "bytes": 1191809,
+      "sha256": "8be47c2a3933eff011b9118ba0f20afaa1ae8ef5949dbe36d3641b29abd9ec1a"
+    },
+    {
+      "path": "reference/rhel-openshift-virtualization-engine-overview-2025.pdf",
+      "bytes": 328942,
+      "sha256": "53c121b4d5671e5e977ee6b4d9a588c4b14263d90cd62dd116d7f4ff91df91c6"
+    },
+    {
+      "path": "reference/rhel-satellite-6.19-release-notes.pdf",
+      "bytes": 267745,
+      "sha256": "5526bac01bd7442b0179f089df0dcbd04619f2ccb0051fcf2fa745b819faf3a1"
+    },
+    {
+      "path": "reference/rhel-veeam-kasten-enhancing-virtualization.pdf",
+      "bytes": 598103,
+      "sha256": "742924b3954b8c12feae4dfa874a26eea66470a020e1db800cd7415327a53d55"
+    },
+    {
+      "path": "reference/rhel-veeam-kasten-reference-architecture.pdf",
+      "bytes": 1086563,
+      "sha256": "08ca93032731168b6bf5447299f599d4d789aad62eb337665ee56c91c7d49803"
+    },
+    {
+      "path": "reference/vmware-advanced-cyber-compliance-faq.pdf",
+      "bytes": 305975,
+      "sha256": "1c7ea94e066546e21055ce8cee710cd54531632ec9215d27e55bbf0e06295ae0"
+    },
+    {
+      "path": "reference/vmware-advanced-cyber-compliance-solution-brief.pdf",
+      "bytes": 146116,
+      "sha256": "c8435e343164a9516ef290601f8d5d55a12d76b664b25f77b8acfd422f245697"
+    },
+    {
+      "path": "reference/vmware-advanced-cyber-compliance-spd-december-2025.pdf",
+      "bytes": 226454,
+      "sha256": "8b2dad5062296730bf2b62fa6a183f41b529e8034faf9a510543866a2b9f11a9"
+    },
+    {
+      "path": "reference/vmware-advanced-cyber-compliance-spd-may-2026.pdf",
+      "bytes": 224914,
+      "sha256": "584f04ac0a5198df48fdf652513ed99bbef1d71e0da487ff5f636ddeaef1087f"
+    },
+    {
+      "path": "reference/vmware-antrea-datasheet.pdf",
+      "bytes": 317833,
+      "sha256": "95b698fbca12fadc38a52b01ac12e1b065663833b161f5a3d07c99f7fef6aa12"
+    },
+    {
+      "path": "reference/vmware-cloud-foundation-9-1-technical-documentation.pdf",
+      "bytes": 186661084,
+      "sha256": "71047ce70166281ee3e2b8ea373e7aae0efe44bd682e07519768cb01dff8109f"
+    },
+    {
+      "path": "reference/vmware-f5-vks-validated-solution-march-2026.pdf",
+      "bytes": 1469127,
+      "sha256": "cffd1a8ba6b9a2db68186caf8851d3d1499356ac865a955f66fbb32c028fede0"
+    },
+    {
+      "path": "reference/vmware-vcf-9-1-general-faqs.pdf",
+      "bytes": 335981,
+      "sha256": "ba610291c441d0427a73b08695f0a804082c6f8ffc100d5ed28e599b9daf138e"
+    },
+    {
+      "path": "reference/vmware-vcf-operations-datasheet.pdf",
+      "bytes": 202937,
+      "sha256": "13f1682b494b34a4a986e29b869eb163c5787987f84364930e1f21baeccb2b7f"
+    },
+    {
+      "path": "reference/vmware-vcf-service-administration-development-9-1.pdf",
+      "bytes": 8732481,
+      "sha256": "32eaf5f51bceb9d37e0be859f02bfb77d9720352eaacc2cc218d4adbb024744e"
+    },
+    {
+      "path": "reference/vmware-vcf-spd-june-2026.pdf",
+      "bytes": 260858,
+      "sha256": "0c6046c54ea2cc7ebe786d08129a95095bce91ac9f6639ddd8284a8308f047bf"
+    },
+    {
+      "path": "reference/vmware-vcf-vvf-9-1-1-feature-comparison-2026-10-14.pdf",
+      "bytes": 650686,
+      "sha256": "0474de88401aee48bf1c8007886040bd30ded225c55a10683fd5e33250461e3f"
+    },
+    {
+      "path": "reference/vmware-vks-solution-overview.pdf",
+      "bytes": 841426,
+      "sha256": "38870bbe614eaa25f4e4ff7cdf729d0bfff3cfae9126d6c3eaa00392d45fd0a3"
+    },
+    {
+      "path": "reference/vmware-vsphere-9-1-faq-may-2026.pdf",
+      "bytes": 253464,
+      "sha256": "74a17eae0701da2a5707237a0b9b4126e67e98d6f683bb0503e4201386c9bb1c"
+    },
+    {
+      "path": "reference/vmware-vsphere-product-line-comparison-2026.pdf",
+      "bytes": 229425,
+      "sha256": "1b7945dc614df88cb5d2d1f829d93d52049800d9856a178bbbf3313b8c001ac3"
+    },
+    {
+      "path": "reference/vmware-vsphere-standard-spd-february-2026.pdf",
+      "bytes": 190460,
+      "sha256": "73c8a0c652d9b78422f1677155333a3621998012dafb38fb297db9e2f553c9fd"
+    },
+    {
+      "path": "reference/vmware-vsphere-version-comparison-2026.pdf",
+      "bytes": 140501,
+      "sha256": "8057feae7b658fa1fcb68781fe520ffadbed3a10c2e97839a5d2b5109a84097d"
+    },
+    {
+      "path": "reference/vmware-vvf-9-1-faq.pdf",
+      "bytes": 320543,
+      "sha256": "07fa1f4dbd0774cd6b7511a92417100b9be4966c8f14ccee87bc49fadffcc4ed"
+    },
+    {
+      "path": "reference/vmware-vvf-spd-june-2026.pdf",
+      "bytes": 245129,
+      "sha256": "57db57b211fca5c73a20899de3eb45a00cd594474805db00df4f0462f110af6b"
+    }
+  ],
+  "notes": "Copies created with exclusive-create (no clobber) and verified byte-identical before any edit. prompt.md, review-handoff and request revisions are not copied because this review does not change them."
+}

@@ -1,7 +1,6 @@
 ---
 title: Diagrams and Decision Frameworks
 section: 7
-tone: mix
 status: reviewed
 audience: system engineers new to Claude Code
 description: Flowcharts, decision trees, and Mermaid diagrams
@@ -10,9 +9,7 @@ description: Flowcharts, decision trees, and Mermaid diagrams
 # 7. Diagrams and Decision Frameworks
 
 *Part of the Claude Code Guide*\
-Previous: [Dynamic Workflows](05-dynamic-workflows.md) | Next: [Agent Teams](07-agent-teams.md)
-
-**Tone**: Mix
+Previous: [Dynamic Workflows](05-dynamic-workflows.md) | Next: [Agent Teams](08-agent-teams.md)
 
 This section collects the key diagrams and decision aids. They are also referenced from other chapters.
 

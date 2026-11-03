@@ -1,0 +1,170 @@
+---
+title: Release v6.1.4 · podman-container-tools/podman
+description: Bugfixes Fixed an issue where Podman would not function when run under WSL 3 (#29749). Misc Updated gvproxy to v0.9.0, resolving CVE-2026-107935 Updated Buildah to v1.45.2 Updated Storage to v1....
+sitename: GitHub
+date: "2026-10-12"
+categories: ['repository:109145553']
+fingerprint: "3f0eb4fc1ab6eb48"
+---
+Skip to content
+Navigation Menu
+Sign in
+Products
+Platform
+GitHub
+Repository hosting, code review, and collaboration
+Copilot
+AI coding agent for tasks, projects and automated work
+Build & Ship
+Actions
+CI/CD and automation
+Code Quality
+Quality analysis, fixes, and enforcement
+Codespaces
+Cloud development environments
+Secure
+Code Security
+Vulnerability detection and remediation
+Secret Protection
+Secret scanning and leak prevention
+All Features
+Developers
+Learn
+Documentation
+Training
+Certifications
+Build
+Build with Copilot
+Customize Copilot
+Integrations
+Explore
+Trending repos
+GitHub Sponsors
+Events
+Changelog
+Changelog
+Your source for the latest features, improvements, and fixes across GitHub products, all in one place.
+Businesses
+By Stage
+Enterprises
+Team
+Startups
+Nonprofits
+By Industry
+Healthcare
+Financial services
+Manufacturing
+Government
+See all industries
+Evaluate GitHub
+Why GitHub
+Customer Stories
+Business insights
+Trust Center
+Add-ons
+GitHub Advanced Security
+Enterprise-grade code security
+Copilot for business
+Enterprise-grade AI features
+Premium Support
+Enterprise-grade 24/7 support
+Resources
+Learn & Connect
+Documentation
+Resource center
+Blog
+Events & webinars
+Community Forum
+Customer Stories
+Integrations
+Support
+Customer support
+Training
+GitHub Status
+Company
+About
+Partners
+Changelog
+GitHub Universe
+GitHub Universe
+The event for developers, by developers — talks, workshops, and what’s next for GitHub.
+Pricing
+Search
+/
+Sign in
+Sign up
+Appearance settings
+You signed in with another tab or window.
+Reload
+to refresh your session.
+You signed out in another tab or window.
+Reload
+to refresh your session.
+You switched accounts on another tab or window.
+Reload
+to refresh your session.
+Dismiss alert
+podman-container-tools
+podman
+Repository navigation
+Code
+Issues
+860
+(860)
+Pull requests
+119
+(119)
+Discussions
+Actions
+Projects
+Wiki
+Security and quality
+10
+(10)
+Insights
+More
+items
+Releases
+v6.1.4
+v6.1.4
+Latest
+Latest
+Compare
+Choose a tag to compare
+Sorry, something went wrong.
+Filter
+Loading
+Sorry, something went wrong.
+Uh oh!
+There was an error while loading.
+Please reload this page
+.
+No results found
+github-actions
+released this
+12 Oct 20:59
+·
+830 commits
+to main since this release
+v6.1.4
+This tag was signed with the committer’s
+verified signature
+. The key has expired.
+mheon
+Matt Heon
+464c15f
+This commit was signed with the committer’s
+verified signature
+. The key has expired.
+mheon
+Matt Heon
+Bugfixes
+Fixed an issue where Podman would not function when run under WSL 3 (
+#29749
+).
+Misc
+Updated gvproxy to v0.9.0, resolving
+CVE-2026-107935
+Updated Buildah to v1.45.2
+Updated Storage to v1.64.2
+You can’t perform that action at this time.

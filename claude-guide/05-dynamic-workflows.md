@@ -1,7 +1,6 @@
 ---
 title: Dynamic Workflows
 section: 6
-tone: mix
 status: reviewed
 audience: system engineers new to Claude Code
 description: pipeline, parallel, primitives, and when to use workflows
@@ -11,8 +10,6 @@ description: pipeline, parallel, primitives, and when to use workflows
 
 *Part of the Claude Code Guide*\
 Previous: [Skills](04-skills.md) | Next: [Diagrams and Decision Frameworks](06-diagrams-and-decisions.md)
-
-**Tone**: Mix
 
 Dynamic workflows move the orchestration plan out of the conversation and into a JavaScript script. Claude writes the script; a background runtime executes it. Intermediate results stay in script variables, so your main conversation only receives the final answer.
 

@@ -1,0 +1,631 @@
+{
+  "revision": "r1.0.1",
+  "cutoff": "2026-10-30",
+  "reports": {
+    "research-vmware-r1.0.1.md": {
+      "bytes": 88524,
+      "words": 7423,
+      "headings": 13,
+      "heading_order_ok": true,
+      "cutoff_present": true,
+      "revision_header": true,
+      "unresolved_heading": true,
+      "tables": 11,
+      "external_urls": 57,
+      "internal_links": 189,
+      "local_links": 31,
+      "reference_links": 0
+    },
+    "research-proxmox-r1.0.1.md": {
+      "bytes": 105617,
+      "words": 9158,
+      "headings": 13,
+      "heading_order_ok": true,
+      "cutoff_present": true,
+      "revision_header": true,
+      "unresolved_heading": true,
+      "tables": 11,
+      "external_urls": 76,
+      "internal_links": 187,
+      "local_links": 26,
+      "reference_links": 0
+    },
+    "research-rhel-r1.0.1.md": {
+      "bytes": 162363,
+      "words": 10200,
+      "headings": 13,
+      "heading_order_ok": true,
+      "cutoff_present": true,
+      "revision_header": true,
+      "unresolved_heading": true,
+      "tables": 13,
+      "external_urls": 89,
+      "internal_links": 0,
+      "local_links": 30,
+      "reference_links": 210
+    },
+    "research-vm-comparison-r1.0.1.md": {
+      "bytes": 83983,
+      "words": 6939,
+      "headings": 14,
+      "heading_order_ok": true,
+      "cutoff_present": true,
+      "revision_header": true,
+      "unresolved_heading": true,
+      "tables": 12,
+      "external_urls": 58,
+      "internal_links": 115,
+      "local_links": 32,
+      "reference_links": 0
+    }
+  },
+  "pdfs": {
+    "proxmox-backup-4-2-datasheet.pdf": {
+      "bytes": 1984097,
+      "pages": 5,
+      "valid": true,
+      "sha256": "802523e0e03dc2a3e6a42349fc90458ddf234f047762684076496738730fb227",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-backup-4-2-guide.pdf": {
+      "bytes": 4448889,
+      "pages": 317,
+      "valid": true,
+      "sha256": "0b53b762a961ecd11a8bc2a15a1bfb506ab8d1906068910d094feea816ed2b6f",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-backup-4-2-release.pdf": {
+      "bytes": 63418,
+      "pages": 2,
+      "valid": true,
+      "sha256": "43eb552ccc08951a6e57ba4abc4e02069333817abbc5fa243f09019cf72f14ae",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-backup-subscription-agreement-v2-5.pdf": {
+      "bytes": 137744,
+      "pages": 6,
+      "valid": true,
+      "sha256": "b5f4c114924efa8079c2ba5cd0a96019ca496dbaee084e375083c59ee1a4a2ed",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-datacenter-manager-1-1-guide.pdf": {
+      "bytes": 3245610,
+      "pages": 136,
+      "valid": true,
+      "sha256": "17164e094d85ed31abfab29a14db92b952a9441f0e2565815777fe2e11e1aa8c",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-offline-mirror-0-8-guide.pdf": {
+      "bytes": 232893,
+      "pages": 48,
+      "valid": true,
+      "sha256": "d07eb1a3ab1fd4a5a59f6114742a31b35ec208a34ce7de709a4cf1a56d05a4b2",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-pdm-1-1-release.pdf": {
+      "bytes": 78606,
+      "pages": 3,
+      "valid": true,
+      "sha256": "5c68fb9ac46baf32368c695938fece07ec3511078c84e7587c24ccde7374a2a7",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-ve-9-2-datasheet.pdf": {
+      "bytes": 1042555,
+      "pages": 6,
+      "valid": true,
+      "sha256": "804ec44a5ca5656c6b980366ccf0cba90fdb1b095b5f48a825ab461f7bbc58cf",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-ve-9-2-release.pdf": {
+      "bytes": 76135,
+      "pages": 3,
+      "valid": true,
+      "sha256": "b1b8fc7ed95490aef1069d2eb46bb292c6b5711b4f1b5cd21c9ec3df5d493eb7",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-ve-9-admin-guide.pdf": {
+      "bytes": 6208268,
+      "pages": 701,
+      "valid": true,
+      "sha256": "a828ca0e6a0f785a14f1e0cd28560b3be32bb88728525540f97de6469d650a73",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-ve-arm64-release.pdf": {
+      "bytes": 86270,
+      "pages": 2,
+      "valid": true,
+      "sha256": "980e3dc0a8cdfb20f940284ea0a3238453495c40eac60f54efdb0b50cae43cb2",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-ve-subscription-agreement-v4-5.pdf": {
+      "bytes": 143683,
+      "pages": 6,
+      "valid": true,
+      "sha256": "e83b7cccec8e7ba06c7dab47d00bb98cf418817ec2d45ef725b2051fbde69452",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "proxmox-veeam-backup-13-user-guide.pdf": {
+      "bytes": 340755729,
+      "pages": 11511,
+      "valid": true,
+      "sha256": "bdfac6d4b72ae61ffdb78499dee0c0b482877c648c465e6f0433830260745aac",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-10-container-guide.pdf": {
+      "bytes": 1026733,
+      "pages": 174,
+      "valid": true,
+      "sha256": "87a2519ae43b54d48c844615c3f13b73d6a0e2b800231eea2ab343472ac29b60",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-10-high-availability.pdf": {
+      "bytes": 1279387,
+      "pages": 214,
+      "valid": true,
+      "sha256": "ae9425ebe3acc4b5892dc511a9832be3e8527389d3cce16a84d0778a78bc09a3",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-10-linux-virtual-machines.pdf": {
+      "bytes": 2885965,
+      "pages": 300,
+      "valid": true,
+      "sha256": "0ce63a1ffbcf1d1c59e826bff13fa77529a514600d26684e251acf7df1721fc3",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-10-networking.pdf": {
+      "bytes": 2413103,
+      "pages": 298,
+      "valid": true,
+      "sha256": "bc619fda5e757b14168f9af7859b07b1a89e58a8d615f24b82a893b5e4c04d04",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-10.2-release-notes.pdf": {
+      "bytes": 1439332,
+      "pages": 203,
+      "valid": true,
+      "sha256": "4c0f9118ba1e0e5778b06e6b9b729f1612e6880119c83bb06923dadab2dcf596",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-aap-2.7-whats-new.pdf": {
+      "bytes": 7939480,
+      "pages": 147,
+      "valid": true,
+      "sha256": "d18bd0a268ebfca730a5cdab614f38f6dc198c39922e2d5f80e9147235b37c14",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-microshift-4.22-networking.pdf": {
+      "bytes": 788607,
+      "pages": 107,
+      "valid": true,
+      "sha256": "346f3862790570396aab99c7671673ee9d7e5f743321bcc0c96132de2470ad41",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-mtv-2.12-planning.pdf": {
+      "bytes": 1324494,
+      "pages": 189,
+      "valid": true,
+      "sha256": "50f8d5ffe37f71ab021d748df9afc6d5cf7e822d1ae74fa27529436841244e75",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-odf-subscription-guide-202408.pdf": {
+      "bytes": 238812,
+      "pages": 17,
+      "valid": true,
+      "sha256": "0e85f87bb3268909ee26f2ed0b189ae85318f4ca9d956ec1140a2da0feae9907",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-openshift-4.22-hardware-networks.pdf": {
+      "bytes": 1076670,
+      "pages": 150,
+      "valid": true,
+      "sha256": "a78e8c38205b62f6f6303d6ca7c9fd36d8765fd50838ef2512c473e3ad6e8c58",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-openshift-4.22-ovn-kubernetes.pdf": {
+      "bytes": 886560,
+      "pages": 117,
+      "valid": true,
+      "sha256": "e419d31ac61ad7a1fc6503ea3d25ca7d02adbaf2aad025f0ca0d5a931bb8dc33",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-openshift-4.22-release-notes.pdf": {
+      "bytes": 759366,
+      "pages": 87,
+      "valid": true,
+      "sha256": "b92dabd1d592cd657bafc10049e17674a8f52006469ec467bfdf50d6a24e9696",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-openshift-4.22-virtualization.pdf": {
+      "bytes": 4855160,
+      "pages": 656,
+      "valid": true,
+      "sha256": "01145c75b418690c8af1790ce61d47cf29218768a36fe728ca8334228f4f3217",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-openshift-subscription-guide-202601.pdf": {
+      "bytes": 559775,
+      "pages": 32,
+      "valid": true,
+      "sha256": "8586ffce4ca3d7695dfb6bf8932e73f60cfe7ad549f87ca67b6f9789767be563",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-openshift-virtualization-architecture-guide.pdf": {
+      "bytes": 1191809,
+      "pages": 57,
+      "valid": true,
+      "sha256": "8be47c2a3933eff011b9118ba0f20afaa1ae8ef5949dbe36d3641b29abd9ec1a",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-openshift-virtualization-engine-overview-2025.pdf": {
+      "bytes": 328942,
+      "pages": 4,
+      "valid": true,
+      "sha256": "53c121b4d5671e5e977ee6b4d9a588c4b14263d90cd62dd116d7f4ff91df91c6",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-satellite-6.19-release-notes.pdf": {
+      "bytes": 267745,
+      "pages": 37,
+      "valid": true,
+      "sha256": "5526bac01bd7442b0179f089df0dcbd04619f2ccb0051fcf2fa745b819faf3a1",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-veeam-kasten-enhancing-virtualization.pdf": {
+      "bytes": 598103,
+      "pages": 4,
+      "valid": true,
+      "sha256": "742924b3954b8c12feae4dfa874a26eea66470a020e1db800cd7415327a53d55",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "rhel-veeam-kasten-reference-architecture.pdf": {
+      "bytes": 1086563,
+      "pages": 36,
+      "valid": true,
+      "sha256": "08ca93032731168b6bf5447299f599d4d789aad62eb337665ee56c91c7d49803",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-advanced-cyber-compliance-faq.pdf": {
+      "bytes": 305975,
+      "pages": 5,
+      "valid": true,
+      "sha256": "1c7ea94e066546e21055ce8cee710cd54531632ec9215d27e55bbf0e06295ae0",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-advanced-cyber-compliance-solution-brief.pdf": {
+      "bytes": 146116,
+      "pages": 3,
+      "valid": true,
+      "sha256": "c8435e343164a9516ef290601f8d5d55a12d76b664b25f77b8acfd422f245697",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-advanced-cyber-compliance-spd-december-2025.pdf": {
+      "bytes": 226454,
+      "pages": 3,
+      "valid": true,
+      "sha256": "8b2dad5062296730bf2b62fa6a183f41b529e8034faf9a510543866a2b9f11a9",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-advanced-cyber-compliance-spd-may-2026.pdf": {
+      "bytes": 224914,
+      "pages": 3,
+      "valid": true,
+      "sha256": "584f04ac0a5198df48fdf652513ed99bbef1d71e0da487ff5f636ddeaef1087f",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-antrea-datasheet.pdf": {
+      "bytes": 317833,
+      "pages": 5,
+      "valid": true,
+      "sha256": "95b698fbca12fadc38a52b01ac12e1b065663833b161f5a3d07c99f7fef6aa12",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-cloud-foundation-9-1-technical-documentation.pdf": {
+      "bytes": 186661084,
+      "pages": 9085,
+      "valid": true,
+      "sha256": "71047ce70166281ee3e2b8ea373e7aae0efe44bd682e07519768cb01dff8109f",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-f5-vks-validated-solution-march-2026.pdf": {
+      "bytes": 1469127,
+      "pages": 10,
+      "valid": true,
+      "sha256": "cffd1a8ba6b9a2db68186caf8851d3d1499356ac865a955f66fbb32c028fede0",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vcf-9-1-general-faqs.pdf": {
+      "bytes": 335981,
+      "pages": 16,
+      "valid": true,
+      "sha256": "ba610291c441d0427a73b08695f0a804082c6f8ffc100d5ed28e599b9daf138e",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vcf-operations-datasheet.pdf": {
+      "bytes": 202937,
+      "pages": 9,
+      "valid": true,
+      "sha256": "13f1682b494b34a4a986e29b869eb163c5787987f84364930e1f21baeccb2b7f",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vcf-service-administration-development-9-1.pdf": {
+      "bytes": 8732481,
+      "pages": 471,
+      "valid": true,
+      "sha256": "32eaf5f51bceb9d37e0be859f02bfb77d9720352eaacc2cc218d4adbb024744e",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vcf-spd-june-2026.pdf": {
+      "bytes": 260858,
+      "pages": 5,
+      "valid": true,
+      "sha256": "0c6046c54ea2cc7ebe786d08129a95095bce91ac9f6639ddd8284a8308f047bf",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vcf-vvf-9-1-1-feature-comparison-2026-10-14.pdf": {
+      "bytes": 650686,
+      "pages": 22,
+      "valid": true,
+      "sha256": "0474de88401aee48bf1c8007886040bd30ded225c55a10683fd5e33250461e3f",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vks-solution-overview.pdf": {
+      "bytes": 841426,
+      "pages": 7,
+      "valid": true,
+      "sha256": "38870bbe614eaa25f4e4ff7cdf729d0bfff3cfae9126d6c3eaa00392d45fd0a3",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vsphere-9-1-faq-may-2026.pdf": {
+      "bytes": 253464,
+      "pages": 3,
+      "valid": true,
+      "sha256": "74a17eae0701da2a5707237a0b9b4126e67e98d6f683bb0503e4201386c9bb1c",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vsphere-product-line-comparison-2026.pdf": {
+      "bytes": 229425,
+      "pages": 10,
+      "valid": true,
+      "sha256": "1b7945dc614df88cb5d2d1f829d93d52049800d9856a178bbbf3313b8c001ac3",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vsphere-standard-spd-february-2026.pdf": {
+      "bytes": 190460,
+      "pages": 3,
+      "valid": true,
+      "sha256": "73c8a0c652d9b78422f1677155333a3621998012dafb38fb297db9e2f553c9fd",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vsphere-version-comparison-2026.pdf": {
+      "bytes": 140501,
+      "pages": 4,
+      "valid": true,
+      "sha256": "8057feae7b658fa1fcb68781fe520ffadbed3a10c2e97839a5d2b5109a84097d",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vvf-9-1-faq.pdf": {
+      "bytes": 320543,
+      "pages": 12,
+      "valid": true,
+      "sha256": "07fa1f4dbd0774cd6b7511a92417100b9be4966c8f14ccee87bc49fadffcc4ed",
+      "linked": true,
+      "markdown_extraction": true
+    },
+    "vmware-vvf-spd-june-2026.pdf": {
+      "bytes": 245129,
+      "pages": 4,
+      "valid": true,
+      "sha256": "57db57b211fca5c73a20899de3eb45a00cd594474805db00df4f0462f110af6b",
+      "linked": true,
+      "markdown_extraction": true
+    }
+  },
+  "web_snapshots": {
+    "antrea-2-7-multicast-guide-2026-10-30.html": {
+      "bytes": 35333,
+      "sha256": "f1ccd9885fb438afe49605c8e686f23555efc8e723325b6df9e4987478bd48cc",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "calico-requirements-2026-10-30.html": {
+      "bytes": 69168,
+      "sha256": "25e3fb4cd6d52012ff3c8eb225fae8a0c7983aa7cdb6317d54e8aad7da5a143d",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "containerd-v2.4.2-release-2026-10-30.html": {
+      "bytes": 172778,
+      "sha256": "629b7b11eebe331ba30aef6b427bf6eb887331d8086fb8225b78f41378aae8c4",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "docker-engine-29-release-notes-2026-10-30.html": {
+      "bytes": 735396,
+      "sha256": "928f13b7c06fba721770857521366134e3007aebd07cee260f63c9d87a6befac",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "docker-ipvlan-driver-2026-10-30.html": {
+      "bytes": 640751,
+      "sha256": "b2875f988efc971063794c53500e731d0c178fe32bf075c2127a05d79e668373",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "kasten-support-2026-10-30.html": {
+      "bytes": 43066,
+      "sha256": "64164485a86d170b4022402c45d314d24bc80d77d726a7ae5688d246082d1051",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "kubernetes-releases-2026-10-30.html": {
+      "bytes": 54705,
+      "sha256": "477b94d323307243904eaf098efe6412e3042459ec4d4c0f392673a80a630f67",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "linux-kernel-bridge-2026-10-30.html": {
+      "bytes": 59976,
+      "sha256": "ac496887d60cc95c77c8ede426a515df22db2ac468246ecf1fd94cc496b44dee",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "podman-v6.1.4-release-2026-10-30.html": {
+      "bytes": 174631,
+      "sha256": "e512ea38a74a0db8dcf9ea5a61fc9e5387895a6f5e7bfc32857e516d3a6a9aab",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "proxmox-pbs-pricing-2026-10-30.html": {
+      "bytes": 90346,
+      "sha256": "5597c8a8c4e9108403dd955a2cfd44dc7eb56007d82c2123bd5bd1bd919a2580",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "proxmox-ve-pricing-2026-10-30.html": {
+      "bytes": 94289,
+      "sha256": "fa1d577bcb60e8f9bfbbf330c32b482a010386eedb1d56d8ab82fb7e73981461",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "rhel-ocp-stable-4.22-release-2026-10-30.txt": {
+      "bytes": 33651,
+      "sha256": "f61449139d98026728e6e99685006eba1a112c7024919e612d4708f0410b186e",
+      "markdown_extraction": false,
+      "linked": true
+    },
+    "rhel-openshift-operator-lifecycle-2026-10-30.html": {
+      "bytes": 1557468,
+      "sha256": "e9da85908f36a2a4e2618cb4e914159bd6733853ff3fa63bf1e4cffbb62b7cc7",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "rhel-release-dates-2026-10-30.html": {
+      "bytes": 91696,
+      "sha256": "2bf3c839d8a8b2d82375cb8015d21fd089e4650855d40ad46b1c87b3a6504a06",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "rhel-rhv-eol-solution-7118759-2026-10-30.html": {
+      "bytes": 70975,
+      "sha256": "49ebcb0d44d2b248caa83abfc8375b053cfbedc3e131ecf389ec1a3ba4a9dc81",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "rhel-rhv-lifecycle-2026-10-30.html": {
+      "bytes": 91654,
+      "sha256": "cb542c7968db014fde451cf8b9ffe785ace1ac69a468e32ad904e4c454a3da98",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "rhel-store-rhel-server-2026-10-30.html": {
+      "bytes": 95263,
+      "sha256": "57a57401cf5a382f3da76ed146a42c24dcb78eae1536ea080a14f476379852ab",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "veeam-proxmox-support-2026-10-30.html": {
+      "bytes": 1318145,
+      "sha256": "5ddc0e8c1e7f0592966040faf084fe8109aae07258e6e60dd6e79a455d63adb7",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-esx-build-numbers-2026-10-30.html": {
+      "bytes": 99782,
+      "sha256": "c1cdae7dcefb7d715ca9be13f082f6947b886e9ae7b812598faba2fe84d257ee",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-kb425448-operations-third-party-2026-10-30.html": {
+      "bytes": 55569,
+      "sha256": "68662710360a5bc5139609d75f20318a019787f9f5c6459fce2233f7c03d5e2c",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-kb458772-standalone-licensing-2026-10-30.html": {
+      "bytes": 52069,
+      "sha256": "1a2eb0914a849a7588efef5e9787d0ee96270031c566d941fb01b3678d2c7b50",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-supervisor-upgrade-advisory-2026-10-09.html": {
+      "bytes": 89338,
+      "sha256": "8ac715cda500d1a0baf44667b56cbe3046e3f5d0b9bb1d420b7a080829c2f57d",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-vcenter-build-numbers-2026-10-30.html": {
+      "bytes": 101073,
+      "sha256": "bc6f3590fd7314745467fa0e26144f7b838302abf4c6ba41abf69d8a971b6a76",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-vcf-9-1-1-bom-2026-10-30.html": {
+      "bytes": 175198,
+      "sha256": "3cd47de37332c23406c60ee243ee8e31b89d379431770d072cbe0963ddc86073",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-vkr-release-notes-2026-10-30.html": {
+      "bytes": 1798846,
+      "sha256": "02458f0eac265c0bf207f80d636acf4a5e46d2c28648b8898a110bcb157359f0",
+      "markdown_extraction": true,
+      "linked": true
+    },
+    "vmware-vks-3-8-release-notes-2026-10-30.html": {
+      "bytes": 153106,
+      "sha256": "e4d56ebe7405b4b821a3be08ed5993688b760e76d1ca7c10cbd8b1638d02e763",
+      "markdown_extraction": true,
+      "linked": true
+    }
+  },
+  "issues": []
+}

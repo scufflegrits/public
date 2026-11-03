@@ -1,7 +1,6 @@
 ---
 title: Index
 section: index
-tone: mix
 status: done
 audience: system engineers new to Claude Code
 description: Detailed clickable table of contents
@@ -88,64 +87,67 @@ Detailed table of contents with links to sections.
 
 ## 7.6 Agent Harnesses, Workflows, and Reliability
 
-- [7.6.1 Difference between a harness and a workflow](13-harnesses-and-reliability.md#761-difference-between-a-harness-and-a-workflow)
-- [7.6.2 Agent harnessing and reliability](13-harnesses-and-reliability.md#762-agent-harnessing-and-reliability)
-- [7.6.3 Contract-first approach](13-harnesses-and-reliability.md#763-contract-first-approach)
-- [7.6.4 Map-driven approach](13-harnesses-and-reliability.md#764-map-driven-approach)
-- [7.6.5 How Claude Code features relate to harness ideas](13-harnesses-and-reliability.md#765-how-claude-code-features-relate-to-harness-ideas)
-- [7.6.6 Best practices and pitfalls](13-harnesses-and-reliability.md#766-best-practices-and-pitfalls)
-- [7.6.7 Open questions and further reading](13-harnesses-and-reliability.md#767-open-questions-and-further-reading)
+- [7.6.1 Difference between a harness and a workflow](07-harnesses-and-reliability.md#761-difference-between-a-harness-and-a-workflow)
+- [7.6.2 Agent harnessing and reliability](07-harnesses-and-reliability.md#762-agent-harnessing-and-reliability)
+- [7.6.3 Contract-first approach](07-harnesses-and-reliability.md#763-contract-first-approach)
+- [7.6.4 Map-driven approach](07-harnesses-and-reliability.md#764-map-driven-approach)
+- [7.6.5 How Claude Code features relate to harness ideas](07-harnesses-and-reliability.md#765-how-claude-code-features-relate-to-harness-ideas)
+- [7.6.6 Best practices and pitfalls](07-harnesses-and-reliability.md#766-best-practices-and-pitfalls)
+- [7.6.7 Open questions and further reading](07-harnesses-and-reliability.md#767-open-questions-and-further-reading)
 
 ## 8. Agent Teams
 
-- [8.1 What agent teams are](07-agent-teams.md#81-what-agent-teams-are)
-- [8.2 Architecture (lead, teammates, task list, mailbox)](07-agent-teams.md#82-architecture-lead-teammates-task-list-mailbox)
-- [8.3 Difference from subagents](07-agent-teams.md#83-difference-from-subagents)
-- [8.4 Enabling agent teams](07-agent-teams.md#84-enabling-agent-teams)
-- [8.5 Limitations and experimental status](07-agent-teams.md#85-limitations-and-experimental-status)
-- [8.6 When to use teams](07-agent-teams.md#86-when-to-use-teams)
-- [8.7 When *not* to use teams](07-agent-teams.md#87-when-not-to-use-teams)
-- [8.8 Cross-session messaging](07-agent-teams.md#88-cross-session-messaging)
-- [8.9 Best practices and pitfalls](07-agent-teams.md#89-best-practices-and-pitfalls)
+- [8.1 What agent teams are](08-agent-teams.md#81-what-agent-teams-are)
+- [8.2 Architecture (lead, teammates, task list, mailbox)](08-agent-teams.md#82-architecture-lead-teammates-task-list-mailbox)
+- [8.3 Difference from subagents](08-agent-teams.md#83-difference-from-subagents)
+- [8.4 Enabling agent teams](08-agent-teams.md#84-enabling-agent-teams)
+- [8.5 Limitations and experimental status](08-agent-teams.md#85-limitations-and-experimental-status)
+- [8.6 When to use teams](08-agent-teams.md#86-when-to-use-teams)
+- [8.7 When *not* to use teams](08-agent-teams.md#87-when-not-to-use-teams)
+- [8.8 Cross-session messaging](08-agent-teams.md#88-cross-session-messaging)
+- [8.9 Best practices and pitfalls](08-agent-teams.md#89-best-practices-and-pitfalls)
 
 ## 9. Passing Context
 
-- [9.1 In the prompt](08-passing-context.md#91-in-the-prompt)
-- [9.2 In dynamic workflows](08-passing-context.md#92-in-dynamic-workflows)
-- [9.3 Via shared files](08-passing-context.md#93-via-shared-files)
-- [9.4 With `context: fork`](08-passing-context.md#94-with-context-fork)
-- [9.5 What subagents do not receive automatically](08-passing-context.md#95-what-subagents-do-not-receive-automatically)
+- [9.1 In the prompt](09-passing-context.md#91-in-the-prompt)
+- [9.2 In dynamic workflows](09-passing-context.md#92-in-dynamic-workflows)
+- [9.3 Via shared files](09-passing-context.md#93-via-shared-files)
+- [9.4 With `context: fork`](09-passing-context.md#94-with-context-fork)
+- [9.5 What subagents do not receive automatically](09-passing-context.md#95-what-subagents-do-not-receive-automatically)
 
 ## 10. Using the Claude Code CLI
 
-- [10.1 Interactive vs headless (`claude -p`)](09-cli.md#101-interactive-vs-headless-claude--p)
-- [10.2 Enabling experimental features](09-cli.md#102-enabling-experimental-features)
-- [10.3 Practical notes for system engineers](09-cli.md#103-practical-notes-for-system-engineers)
+- [10.1 Interactive vs headless (`claude -p`)](10-cli.md#101-interactive-vs-headless-claude--p)
+- [10.2 Enabling experimental features](10-cli.md#102-enabling-experimental-features)
+- [10.3 Practical notes for system engineers](10-cli.md#103-practical-notes-for-system-engineers)
 
 ## 11. Practical Patterns
 
-- [11.1 Research → summarize](10-practical-patterns.md#111-research--summarize)
-- [11.2 Research → implement](10-practical-patterns.md#112-research--implement)
-- [11.3 Parallel review](10-practical-patterns.md#113-parallel-review)
-- [11.4 Pipeline with verification](10-practical-patterns.md#114-pipeline-with-verification)
-- [11.5 Custom agent for code review](10-practical-patterns.md#115-custom-agent-for-code-review)
-- [11.6 When each pattern works (and when it doesn’t)](10-practical-patterns.md#116-when-each-pattern-works-and-when-it-doesnt)
+- [11.1 Research → summarize](11-practical-patterns.md#111-research--summarize)
+- [11.2 Research → implement](11-practical-patterns.md#112-research--implement)
+- [11.3 Parallel review](11-practical-patterns.md#113-parallel-review)
+- [11.4 Pipeline with verification](11-practical-patterns.md#114-pipeline-with-verification)
+- [11.5 Custom agent for code review](11-practical-patterns.md#115-custom-agent-for-code-review)
+- [11.6 When each pattern works (and when it doesn’t)](11-practical-patterns.md#116-when-each-pattern-works-and-when-it-doesnt)
 
 ## 12. Quick Reference
 
-- [12.1 Agent comparison table](11-quick-reference.md#121-agent-comparison-table)
-- [12.2 Pipeline vs parallel](11-quick-reference.md#122-pipeline-vs-parallel)
-- [12.3 Skills vs subagents](11-quick-reference.md#123-skills-vs-subagents)
-- [12.4 Frontmatter cheat sheet](11-quick-reference.md#124-frontmatter-cheat-sheet)
-- [12.5 Common prompts](11-quick-reference.md#125-common-prompts)
-- [12.6 Common pitfalls](11-quick-reference.md#126-common-pitfalls)
+- [12.1 Agent comparison table](12-quick-reference.md#121-agent-comparison-table)
+- [12.2 Pipeline vs parallel](12-quick-reference.md#122-pipeline-vs-parallel)
+- [12.3 Skills vs subagents](12-quick-reference.md#123-skills-vs-subagents)
+- [12.4 Frontmatter cheat sheet](12-quick-reference.md#124-frontmatter-cheat-sheet)
+- [12.5 Common prompts](12-quick-reference.md#125-common-prompts)
+- [12.6 Common pitfalls](12-quick-reference.md#126-common-pitfalls)
 
 ## 13. Appendix
 
-- [13.1 Full Mermaid diagram sources](12-appendix.md#131-full-mermaid-diagram-sources)
-- [13.2 Glossary](12-appendix.md#132-glossary)
-- [13.3 Further reading](12-appendix.md#133-further-reading)
-- [13.4 Open items and future expansions](12-appendix.md#134-open-items-and-future-expansions)
+- [13.1 Full Mermaid diagram sources](99-appendix.md#131-full-mermaid-diagram-sources)
+- [13.2 Glossary](99-appendix.md#132-glossary)
+- [13.3 Further reading](99-appendix.md#133-further-reading)
+- [13.4 Open items and future expansions](99-appendix.md#134-open-items-and-future-expansions)
+- [13.5 Acronyms and key terms](99-appendix.md#135-acronyms-and-key-terms)
+  - [13.5.1 Acronyms and abbreviations](99-appendix.md#1351-acronyms-and-abbreviations)
+  - [13.5.2 Key terms](99-appendix.md#1352-key-terms)
 
 ______________________________________________________________________
 

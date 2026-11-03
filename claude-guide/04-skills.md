@@ -1,7 +1,6 @@
 ---
 title: Skills
 section: 5
-tone: mix
 status: reviewed
 audience: system engineers new to Claude Code
 description: Skills vs subagents, context fork, and practical examples
@@ -11,8 +10,6 @@ description: Skills vs subagents, context fork, and practical examples
 
 *Part of the Claude Code Guide*\
 Previous: [Subagents](03-subagents.md) | Next: [Dynamic Workflows](05-dynamic-workflows.md)
-
-**Tone**: Mix
 
 Skills are reusable instructions, knowledge, or workflows that Claude can load. They differ from subagents: skills add content to a context, while subagents are isolated workers that return a summary.
 

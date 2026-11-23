@@ -1,24 +1,9 @@
-# Mermaid code conventions — embedded CSS edition
+# Mermaid code conventions
 
 Use these conventions for new diagrams in this collection, whether written by hand
 or generated with assistance. They are authoring conventions, not additional Mermaid
 syntax rules. Existing diagrams and historical lessons may use older names and older
 formatting; preserve them unless a rename or reformat is part of the requested change.
-
-
-This is the **CSS r1.0.7 edition**, derived from
-[the standard r1.0.7 guide](mermaid-best-practices-r1.0.7.md). It is a separate
-alternative, revised from the CSS r1.0.6 baseline; both r1.0.6 files are unchanged. For new diagrams governed by this
-edition, put all custom appearance rules in embedded `config.themeCSS`; do not
-write `classDef`, inline `style`, or numeric `linkStyle` statements. Keep Mermaid
-`class` statements to attach semantic classes to nodes and subgraphs.
-
-The selector recipes and starter template below target **flowcharts with
-`look: classic`**, checked with Mermaid **12.2.0** in Chromium. YAML configuration
-requires Mermaid 10.5 or newer, but that minimum does not guarantee these SVG
-selectors or named-edge features. The r1.0.7 diagram-type section adds separately tested ER and sequence examples;
-other looks and viewer versions still need inspected selectors and render tests. Do not copy flowchart selectors
-into a mind map, sequence diagram, or block diagram and assume they match.
 
 ## For AI agents: verify before you deliver
 
@@ -29,13 +14,13 @@ a Linux terminal, so first work out what you can actually run.
 
 ### 1. Find out what you can run
 
-| Where you are                                         | What you can do                                                                                     |
-| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Chat or web page with no code execution               | Nothing renders. Check the source by hand against [review before sharing](#review-before-sharing), deliver it, and say it is unrendered. |
-| Interface that previews Mermaid for you               | The preview is one viewer with its own Mermaid version. Look at it, but report it by name, not as an `mmdc` render. |
-| Sandbox that runs code but cannot install or browse   | Use `mmdc` if it is already present; otherwise use the [parse check](#4-if-you-cannot-render-parse-and-say-so). |
-| Linux or macOS terminal, container, or desktop shell  | Render with `mmdc`. Install it if missing and permitted.                                             |
-| Windows desktop (PowerShell or Command Prompt)        | Render with `mmdc`, which npm installs as `mmdc.cmd`. Use the Python script below rather than Bash. |
+| Where you are | What you can do |
+| -- | -- |
+| Chat or web page with no code execution | Nothing renders. Check the source by hand against [review before sharing](#review-before-sharing), deliver it, and say it is unrendered. |
+| Interface that previews Mermaid for you | The preview is one viewer with its own Mermaid version. Look at it, but report it by name, not as an `mmdc` render. |
+| Sandbox that runs code but cannot install or browse | Use `mmdc` if it is already present; otherwise use the [parse check](#4-if-you-cannot-render-parse-and-say-so). |
+| Linux or macOS terminal, container, or desktop shell | Render with `mmdc`. Install it if missing and permitted. |
+| Windows desktop (PowerShell or Command Prompt) | Render with `mmdc`, which npm installs as `mmdc.cmd`. Use the Python script below rather than Bash. |
 
 Check whether `mmdc` is installed:
 
@@ -48,14 +33,6 @@ Command Prompt: where mmdc
 A diagram you have not rendered is unverified, however correct the source looks.
 See [renderer identity and evidence](#renderer-identity-and-evidence) and the
 [reusable audit workflow](#reusable-audit-workflow) for the r1.0.7 verification path.
-Record both the renderer and the Mermaid library version. A command named `mmdc`
-can be an unrelated Python wrapper: `mmdc --version` alone does not identify the
-Mermaid library. The npm Mermaid CLI uses Puppeteer; a Python wrapper may use
-Playwright and different configuration keys. Check `--help` before passing browser
-configuration. The initial trial used `/home/sysadmin/.venv/bin/mmdc` (wrapper
-0.1.3), Playwright, and a CDN-loaded Mermaid library. That wrapper's `-p` file uses
-`executable_path`, not Puppeteer's `executablePath`. Other installations may have
-an official npm CLI instead. Report the implementation actually invoked.
 
 ### 2. Render every block you changed
 
@@ -64,7 +41,7 @@ macOS) or `py` (Windows). It extracts each Mermaid block from a Markdown file in
 its own `.mmd` file, so every output maps to one block, then renders an SVG for the
 checks in [verifying a render](#verify-a-render) and a PNG to look at:
 
-```python
+````python
 """Render every mermaid block in a Markdown file with mmdc.
 
 Usage: python render_blocks.py diagram.md [background] [puppeteer-config.json]
@@ -98,11 +75,28 @@ for i, block in enumerate(blocks, 1):
         if puppeteer:
             cmd += ['-p', puppeteer]
         result = subprocess.run(cmd, capture_output=True, text=True)
-        status = 'ok' if result.returncode == 0 else 'FAILED: ' + (result.stderr.strip().splitlines() or ['no output'])[0]
+        # An exit code of 0 is not enough: mmdc can print a browser error,
+        # write the image, and still exit 0 (see "Errors that exit 0" below).
+        errors = [line for line in (result.stdout + result.stderr).splitlines() if 'error' in line.lower()]
+        if result.returncode != 0:
+            status = 'FAILED: ' + (errors or result.stderr.strip().splitlines() or ['no output'])[0]
+        elif errors:
+            status = 'CHECK, exit 0 but printed: ' + errors[0]
+        else:
+            status = 'ok'
         print(f'block {i} {ext}: {status}')
-        failures += result.returncode != 0
+        failures += result.returncode != 0 or bool(errors)
 sys.exit(1 if failures else 0)
-```
+````
+
+#### Errors that exit 0
+
+`mmdc` 12.0.0 (bundling Mermaid 12.2.0) rendered a state diagram under ELK, printed
+`Error: <rect> attribute height: A negative value is not valid. ("-30")`, wrote the
+PNG, and exited 0. The image looked plausible but one composite state's box was
+missing and its states floated loose. The script above therefore counts any printed
+line containing `error` as a failure. Open the image of every block that reports
+`CHECK`; never accept a render because the file exists or the exit code is 0.
 
 Pass the diagram's canvas color as the background: `'#0b1120'` for the dark
 template, `white` for a light card. If you can view images, open each PNG and
@@ -115,10 +109,10 @@ the PNG will show fallback symbols or empty boxes that most readers will not see
 
 **SVG for checks, PNG for looking.** Each format has a job:
 
-| Format | Use it for                                                                                          |
-| ------ | --------------------------------------------------------------------------------------------------- |
-| SVG    | Text checks: edge styles, `themeCSS` rules, canvas color, measured positions. Also a deliverable for browser-based destinations. |
-| PNG    | Looking at the drawing. Most agent image viewers accept PNG, not SVG. Also the deliverable for destinations that are not browsers (Word, slides, some wikis). |
+| Format | Use it for |
+| -- | -- |
+| SVG | Text checks: edge styles, `themeCSS` rules, canvas color, measured positions. Also a deliverable for browser-based destinations. |
+| PNG | Looking at the drawing. Most agent image viewers accept PNG, not SVG. Also the deliverable for destinations that are not browsers (Word, slides, some wikis). |
 
 Make both directly with `mmdc`, as the script does. The Markdown block is the
 deliverable; rendered files are review artifacts unless the user asked for an image.
@@ -159,7 +153,16 @@ headless Chrome, which it may also need to download
   Chrome, Chromium, or Edge with `"executablePath"`. If none exists, you cannot
   render.
 - **Several `mmdc` versions are present.** A global install and a project install
-  can differ by a major version. Record the one you actually ran.
+  can differ by a major version. Record the one you actually ran, and the Mermaid
+  library it bundles: `mmdc` 12.0.0 bundled Mermaid 12.2.0 in the r1.0.9 tests
+  (`node_modules/mermaid/package.json` inside the CLI's install folder).
+- **Playwright's Chromium is already installed.** The official npm CLI can drive it.
+  A config such as
+  `{"executablePath": "/home/USER/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome", "args": ["--no-sandbox"]}`
+  worked with `mmdc` 12.0.0 (Chrome for Testing 156). The folder number changes
+  with each Playwright release; list `~/.cache/ms-playwright/` to find yours.
+- **`-w` / `--width` is rejected.** `mmdc` 12.0.0 reports `unknown option '-w'`.
+  Use `-s` (scale) for a sharper PNG, or `--size` for a maximum width or height.
 
 ### 4. If you cannot render, parse and say so
 
@@ -210,18 +213,38 @@ instead of converting them.
 Mermaid IDs are references to drawing elements, not program variables. Keep the ID
 stable when changing a displayed label, device model, address, or course title.
 
-| Element               | Convention                                                                  | Example                                               |
-| --------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------- |
-| Node ID               | Uppercase words separated by underscores; scope, role, then optional number | `SITE_A_SW_01`, `SITE_A_RTR_01`, `TRAINING_COURSE_01` |
-| Annotation node ID    | Uppercase purpose prefix, then the item it describes                        | `LEGEND_WILD_CARD`, `RULE_TIEBREAKERS`                |
-| Subgraph ID           | `SG_` followed by an uppercase descriptive scope                            | `SG_SITE_A`, `SG_TRAINING`, `SG_LEGEND`               |
-| Edge ID               | `edge_` followed by lowercase endpoint roles and optional purpose           | `edge_site_a_sw_rtr_data`                             |
-| Invisible layout edge | `layout_` followed by its endpoint roles                                    | `layout_course_01_03`                                 |
-| Node role class       | `node` followed by a descriptive role in camelCase                          | `nodeNetwork`, `nodeServer`, `nodeNote`               |
-| Node status class     | `state` followed by a status in camelCase                                   | `statePending`, `stateUnavailable`                    |
-| Edge CSS rule         | Select the named path by `data-id`; describe its meaning in a CSS comment | `.flowchart-link[data-id="edge_server_switch_data"]` |
-| Subgraph class        | `group` followed by the grouping role in camelCase                          | `groupSite`, `groupStage`, `groupWrapper`             |
-| Layout CSS rule       | Hide paths named with the `layout_` prefix | `path[data-id^="layout_"]` |
+**Use descriptive, stable IDs instead of numeric or position-based references.**
+Name nodes, subgraphs, and explicitly referenced edges for their role or meaning,
+not their declaration order. Prefer `VALIDATE_REQUEST` over `1` or `node1`, and
+`edge_api_database_query` over `edge1`. Keep references tied to those IDs when
+reordering or inserting elements. Meaningful numbers remain valid, such as
+`SITE_A_SW_01` for one of several switches; this is not a ban on digits in IDs or
+numbers in displayed labels. Apply this convention wherever the diagram type
+supports explicit IDs.
+
+For flowchart edge styling, assign a descriptive edge ID and apply a named class
+to it instead of using a numeric `linkStyle` index. For example, declare
+`API edge_api_database_query@--> DATABASE`, then apply
+`class edge_api_database_query edgeData` with a corresponding `classDef edgeData`.
+Numeric `linkStyle` indexes refer to edge declaration order, so inserting or
+reordering edges can silently move a style to the wrong connection.
+`linkStyle default` remains appropriate for a shared baseline. If the target
+renderer does not support edge IDs, document that compatibility constraint and
+verify any required numeric indexes after every edge insertion, deletion, or
+reorder. See the official [flowchart edge ID syntax](https://mermaid.js.org/syntax/flowchart.html#attaching-an-id-to-edges).
+
+| Element | Convention | Example |
+| -- | -- | -- |
+| Node ID | Uppercase words separated by underscores; scope, role, then optional number | `SITE_A_SW_01`, `SITE_A_RTR_01`, `TRAINING_COURSE_01` |
+| Annotation node ID | Uppercase purpose prefix, then the item it describes | `LEGEND_WILD_CARD`, `RULE_TIEBREAKERS` |
+| Subgraph ID | `SG_` followed by an uppercase descriptive scope | `SG_SITE_A`, `SG_TRAINING`, `SG_LEGEND` |
+| Edge ID | `edge_` followed by lowercase endpoint roles and optional purpose | `edge_site_a_sw_rtr_data` |
+| Invisible layout edge | `layout_` followed by its endpoint roles | `layout_course_01_03` |
+| Node role class | `node` followed by a descriptive role in camelCase | `nodeNetwork`, `nodeServer`, `nodeNote` |
+| Node status class | `state` followed by a status in camelCase | `statePending`, `stateUnavailable` |
+| Edge class | `edge` followed by the connection meaning in camelCase | `edgeData`, `edgeManagement`, `edgeEncrypted` |
+| Subgraph class | `group` followed by the grouping role in camelCase | `groupSite`, `groupStage`, `groupWrapper` |
+| Layout class | Use `layoutOnly` for invisible layout helpers | `class layout_course_01_03 layoutOnly` |
 
 Use ASCII letters, digits, and underscores for IDs, beginning with a letter.
 Avoid bare `end` and punctuation-heavy IDs even where a particular parser accepts
@@ -255,12 +278,8 @@ Use this order within each Mermaid block:
 1. Subgraphs and node declarations, with each node's full label defined once.
 1. Meaningful connections, grouped by workflow or traffic path.
 1. Layout-only connections, clearly commented and placed in their intended group.
-1. `class` assignments for node roles, statuses, and subgraphs at the bottom.
-
-The CSS definitions are already in the front matter's `themeCSS: |` block. Group
-those rules by node role, status, edge meaning, subgraph, and layout helper. Edge
-rules target stable named-edge attributes directly; they do not need `class`
-assignments.
+1. `classDef` declarations, grouped by node role, status, edge role, and group style.
+1. `class` assignments, grouped to match those definitions.
 
 ### Formatting
 
@@ -269,14 +288,15 @@ assignments.
   the front matter gives the whole block one rule. Mermaid ignores body indentation,
   so this is for readers, and two spaces keeps deeply nested subgraphs narrow.
   Never use tabs: they are invalid in YAML.
-- **Omit semicolons on Mermaid statements.** Inside `themeCSS`, use ordinary CSS:
-  one property per line and a semicolon after every declaration. Put the opening
-  brace after the selector and the closing brace on its own line, as in the starter.
-  This is an intentional distinction between the two languages.
-- Use YAML's literal block scalar `themeCSS: |`, not its folded scalar. Indent the
-  CSS two spaces under `themeCSS`, and each declaration two more spaces.
-- Inside that literal scalar, comments are CSS `/* comments */`, not YAML `#`
-  comments or Mermaid `%%` comments. Outside it, front matter uses YAML comments.
+- **Omit statement semicolons.** Mermaid treats them as optional terminators. Do not
+  mix styles within a block. Quoting every label (see below) prevents a `;` in label
+  text from ending a statement early.
+- **Never put `;` in sequence-diagram message text.** Message text cannot be quoted,
+  so `A->>B: strip team suns; refuse if changed` ends the statement at the `;` and
+  fails with `Parse error on line 4: ... Expecting '()', 'SOLID_OPEN_ARROW', ...`
+  (`mmdc` 12.0.0, exit 1, no image). The parser reads the rest of the line as a new
+  statement, so the reported token (`','` or `'NEWLINE'` in the tests) depends on
+  what follows the `;`. Use a comma or "then" instead.
 - Put each declaration, connection, and style statement on its own line. Prefer a
   single connection per line when it has a name, label, or special style.
 - `A & B --> C & D` is fine for unnamed, unlabeled structural edges. It draws an
@@ -295,15 +315,14 @@ assignments.
   [formatting lessons](mermaid-lessons-r1.0.6.md#known-bugs--hard-limitations)).
 - **No `%%` comment of any kind may appear above front matter's opening `---`.**
   That is a parse error too.
-- Outside `themeCSS`'s literal scalar, front-matter comments use `#`. Put a comment
-  above each setting or a closely related group of settings explaining its purpose.
-  Inside the CSS scalar, use `/* ... */` comments.
+- Inside front matter, comments use `#`. Put a `#` comment above each setting that
+  explains why it is there.
 
 ## Configuration
 
 Keep each diagram self-contained. Its palette, layout engine, and spacing belong in
 its own front matter, so the diagram looks the same when copied or previewed
-without an external `--configFile`, theme JSON file, or stylesheet.
+without an external `--configFile` or theme JSON file.
 
 ### Front matter
 
@@ -316,8 +335,6 @@ Configure every new diagram with YAML front matter: a `config:` block between tw
 config:
   # The only built-in theme meant to be customized.
   theme: base
-  # Keep the SVG structure consistent with the CSS recipes.
-  look: classic
   layout: elk
   themeVariables:
     # Quote hex colors: an unquoted # starts a YAML comment.
@@ -334,10 +351,8 @@ Rules:
 - **Indent nested settings two spaces** under their parent, with spaces only.
 - **Use quoted hex for color-related `themeVariables`.** Prefer readable CSS named
   colors only in CSS-consuming contexts; see the color/background decision table.
-- **Quote hex values in YAML settings.** `background: #0b1120` parses as an
-  empty value followed by a comment. YAML accepting a name does not establish
-  theme-engine support. Inside the `themeCSS: |` literal, write normal CSS, such as
-  `fill: #172b46;` or `fill: lavender;`; CSS hex values there need no quotes.
+- **Quote hex colors.** `background: #0b1120` parses as an empty value followed by a
+  comment. A named color can be valid YAML while outside the supported theme-color contract.
 - **YAML front matter requires Mermaid 10.5 or newer.** Older hosts can ignore or
   reject it. This minimum does not guarantee the newer named-edge, ER grouping,
   selector, or layout behavior used below; test the actual viewer version.
@@ -347,12 +362,12 @@ Add settings to solve a demonstrated problem, and record the intended renderer w
 relying on version-specific features. To see which Mermaid version a viewer runs,
 render a block containing only `info`. These settings come up often:
 
-| Setting                          | Use it when                                                                                                     |
-| -------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `flowchart.htmlLabels`           | Labels use `<b>`, `<br/>`, or other HTML. Set it to `true`.                                                     |
-| `flowchart.wrappingWidth`        | Long node-label lines wrap at the default of about 200px. Raise it (for example 400). It does not widen edge labels, whose space is set by the calculated edge, and it is not a minimum box width. |
-| `flowchart.subGraphTitleMargin`  | A subgraph title crowds the first node. It takes `top` and `bottom` values. Prefer it to padding the title with blank HTML. |
-| `markdownAutoWrap`               | Deliberate line breaks in Markdown String labels wrap again. Set it to `false`. It is a top-level key, not under `flowchart`. |
+| Setting | Use it when |
+| -- | -- |
+| `flowchart.htmlLabels` | Labels use `<b>`, `<br/>`, or other HTML. Set it to `true`. |
+| `flowchart.wrappingWidth` | Long node-label lines wrap at the default of about 200px. Raise it (for example 400). It does not widen edge labels, whose space is set by the calculated edge, and it is not a minimum box width. |
+| `flowchart.subGraphTitleMargin` | A subgraph title crowds the first node. It takes `top` and `bottom` values. Prefer it to padding the title with blank HTML. |
+| `markdownAutoWrap` | Deliberate line breaks in Markdown String labels wrap again. Set it to `false`. It is a top-level key, not under `flowchart`. |
 
 A label is part of the layout: changing its text or line breaks changes its size and
 can move nearby nodes and arrows. Fix label content before reaching for these settings.
@@ -424,6 +439,64 @@ That subgraph is then structural, not decoration: removing its `subgraph`/`end`
 wrapper orphans every node that was inside it, because the edge pointed at the
 group rather than at any member.
 
+### One edge per relationship
+
+**Merge a pair of opposite arrows into one two-way edge** when both directions are
+the same relationship, such as a client reporting status to a control server and
+the server sending the network map back. Two arrows double the lines and labels
+the layout has to place and invite a reader to look for a difference between
+them. Put both directions in one label:
+
+```text
+CLIENT_NODE edge_client_control_control@<-.->|"Control: status in,<br/>network map out"| TS_CONTROL
+```
+
+`<-.->` (dotted, both ends) and `<-->` (solid, both ends) accept an edge ID and a
+label, and the named edge takes a `class` like any other; tested with `mmdc`
+12.0.0 under both engines. Keep two edges when the directions differ in meaning,
+timing, or protocol, and give them `_request`/`_response` style suffixes.
+
+### Alternative paths
+
+**Draw alternatives as parallel routes between the same hops.** If a connection can
+go direct, through a relay, or through a fallback relay, every route still crosses
+whatever sits on both ends, such as each side's NAT or firewall. Drawing one route
+through the NATs and another straight from host to relay claims the relayed
+traffic skips the NATs. Put the shared hops on the outside and fan out only where
+the routes actually differ:
+
+```text
+CLIENT_NAT edge_client_nat_direct@<-->|"1 preferred"| DIRECT_PATH
+CLIENT_NAT edge_client_nat_peer_relay@<-->|"2 if configured"| PEER_RELAY
+CLIENT_NAT edge_client_nat_derp@<-->|"3 last resort"| DERP_RELAY
+DIRECT_PATH edge_direct_host_nat@<--> HOST_NAT
+PEER_RELAY edge_peer_relay_host_nat@<--> HOST_NAT
+DERP_RELAY edge_derp_host_nat@<--> HOST_NAT
+```
+
+**Number the labels when the order matters.** `1 preferred`, `2 if configured`,
+`3 last resort` states precedence in text; layout position does not, because the
+engine may stack the routes in any order. Label only the first hop of each route;
+the return hop needs no repeat. A subgraph around the alternatives (`SG_PATHS`
+in the [worked example](#worked-example-network-overlay)) says they are one choice.
+
+### Direction of configuration and dependency
+
+**Point an arrow from what is consumed to what consumes it.** A policy file, a
+template, or a configuration source flows into the service that loads it:
+`POLICY --> SERVER`, labelled with what flows (`"Access rules"`), not
+`SERVER --> POLICY` labelled with what the server does with it. The reversed form
+reads as the server writing the policy. Check administrative chains the same way:
+`ADMIN --> POLICY --> CONTROL`, where each arrow is an edit or a load.
+
+### Labels must stay true
+
+A label is a claim. **Do not call a component optional when only its form is
+optional.** A relay that is always available, whether a public one or one you
+run, is not optional; say which forms exist (`"DERP relay<br/>public map or self-hosted"`). Reserve `optional` for a component the reader can leave out
+entirely, and state the condition in the label or the prose
+(`"Subnet route, optional"`).
+
 ## Emoji in labels
 
 An emoji can make a diagram faster to scan: a server, a database, or a warning is
@@ -463,10 +536,10 @@ machine renders it, so emoji need more care here than in text.
 
 ### Whose fonts decide
 
-| Output                                             | Emoji drawn with                         |
-| -------------------------------------------------- | ---------------------------------------- |
-| PNG from `mmdc`                                    | The rendering machine's fonts, baked in  |
-| SVG, or a diagram viewed live (GitHub, VS Code)    | Each reader's fonts, so it can vary      |
+| Output | Emoji drawn with |
+| -- | -- |
+| PNG from `mmdc` | The rendering machine's fonts, baked in |
+| SVG, or a diagram viewed live (GitHub, VS Code) | Each reader's fonts, so it can vary |
 
 Rendered with `mmdc 11.16.0` and the Noto Color Emoji font, every vocabulary entry
 drew in color. With that font hidden, the same source drew monochrome symbols and box
@@ -480,23 +553,6 @@ width, so re-render after adding or removing one.
 Render the complete diagram before adding any layout aid. Cross-boundary links can
 override local subgraph direction; do not assume that adding `direction TB` will
 force a group's internal arrangement.
-
-### Keep connections clear of titles
-
-A cross-boundary edge must not pass through a subgraph title or node label. Larger
-CSS title fonts change the space those labels need. `subGraphTitleMargin` adds room
-inside a group but does not guarantee that an incoming edge avoids its centered
-title. Check the actual PNG after every font or connection change.
-
-For a top-to-bottom diagram with an incoming edge through a group's title, first
-try an overall `flowchart LR` direction so cross-group connections enter a side.
-Re-render the complete diagram: do not assume the change fixed every route. If
-that does not resolve it, reorganize the logical grouping or use an explicitly
-labeled ingress component only when it represents a real component. Do not add
-fictional traffic paths or move a node out of its ownership group just for spacing.
-Title/edge overlap is a failed visual check even if parsing, CSS selector matches,
-and computed styles all pass. Record and resolve the failure before reporting the
-diagram as visually verified.
 
 Neither engine lets you set sibling order directly. ELK's layered algorithm starts
 from an order loosely based on declaration order, then swaps neighbors to reduce
@@ -522,9 +578,8 @@ full drawing. When placement is wrong, try these in order and re-render after ea
    visible label and a status-style dashed border so it is not mistaken for a
    real stage.
 1. **Add invisible links.** Use `~~~` within the owning group, name it `layout_*`,
-   and hide them with `path[data-id^="layout_"]` in embedded CSS if
-   global strokes make them visible. Do not assign classes to layout edges.
-   A hidden link still constrains ranks and spacing.
+   and assign `class layout_* layoutOnly` (`classDef layoutOnly opacity:0`) if global
+   strokes make it visible. A hidden link still constrains ranks and spacing.
 
 Under ELK, a chain of invisible links tends to become a stacked column, not a row.
 That is useful for a tidy list inside one group, but chaining sibling subgraphs to
@@ -532,6 +587,47 @@ force a horizontal row turns the row into a staircase.
 
 If exact placement still matters after these steps, the drawing may need a
 different tool. Layout aids must never change what the diagram means.
+
+### When a graph has too many edges
+
+No engine makes a dense dependency graph readable. A module diagram with 38 nodes
+and 79 edges (no `layout` setting) rendered without errors and was still unusable: a mesh of crossing lines that no reader could follow. Neither reordering
+nor invisible links fixes that. Split the content instead:
+
+- **The diagram shows the shape:** one node per layer or group, with the edges
+  between groups (seven boxes and about twenty arrows in the tested replacement).
+- **A table lists the detail:** one row per module, naming what it uses. A table is
+  searchable, diffs cleanly, and can be checked by a script; an 80-edge drawing is
+  none of those.
+
+State in the prose which of the two is authoritative when they disagree.
+
+### Choose the engine per diagram, after rendering both
+
+The engine that suits one diagram can be wrong for the next one in the same
+document. Two diagrams in one plan, rendered with `mmdc` 12.0.0 (Mermaid 12.2.0):
+
+| Diagram | ELK | dagre | Kept |
+| -- | -- | -- | -- |
+| `flowchart TB`, six layer subgraphs, edges aimed at subgraph IDs | Kept the top-to-bottom layering | Laid the layers out left to right and ran lines through unrelated nodes | ELK |
+| `stateDiagram-v2`, four concurrent regions | Put one region under the other three and crowded its edge labels | Kept the regions side by side in declared order, labels beside their arrows | dagre |
+
+Before comparing, give every wrapper subgraph the flowchart's `direction`. Without
+it, dagre draws the diagram turned 90° and you end up judging the rotated layout;
+see [page-level patterns](#page-level-patterns). GitHub renders every diagram with
+dagre whatever `layout` says, so look at the dagre render even when you keep ELK.
+
+Record the choice and the reason in a front-matter comment, so the next editor
+does not switch it back:
+
+```text
+---
+config:
+  # Rendered under both engines: dagre keeps the four regions side by side;
+  # elk put one underneath and crowded its labels.
+  layout: dagre
+---
+```
 
 ### Two columns for a long list
 
@@ -549,16 +645,9 @@ subgraph SG_PROGRAM["Program training"]
   PROGRAM_COURSE_02 layout_course_02_04@~~~ PROGRAM_COURSE_04 layout_course_04_06@~~~ PROGRAM_COURSE_06 layout_course_06_08@~~~ PROGRAM_COURSE_08
 end
 
-%% Hide named layout edges with the themeCSS selector shown below; no classDef.
-```
-
-Put this rule in the diagram's existing `themeCSS: |` block:
-
-```css
-path[data-id^="layout_"] {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
+classDef layoutOnly opacity:0
+class layout_course_01_03,layout_course_03_05,layout_course_05_07 layoutOnly
+class layout_course_02_04,layout_course_04_06,layout_course_06_08 layoutOnly
 ```
 
 For eight courses in the orientation guide, one chain measured 314 × 891 px, no
@@ -573,144 +662,248 @@ realistic label lengths before trusting the shape.
 Two patterns, both checked under dagre in the MLB bracket:
 
 - **Invisible wrapper subgraph.** A subgraph whose label is a single space shows no
-  title. A `groupWrapper` class with a CSS stroke of `none` and a fill matching the canvas
-  hides the box while giving its contents a solid background. Define that class
-  in embedded CSS:
-
-  ```css
-  .cluster.groupWrapper rect {
-    fill: white !important;
-    stroke: none !important;
-  }
-  ```
+  title. A `groupWrapper` class with `stroke:none` and a fill matching the canvas
+  hides the box while giving its contents a solid background.
 
   ```text
   subgraph SG_BRACKET[" "]
     direction LR
     ...
   end
+  classDef groupWrapper fill:white,stroke:none
   class SG_BRACKET groupWrapper
   ```
+
+  **Always give a wrapper its own `direction`, the same as the flowchart's.** Under
+  dagre, a subgraph that declares no direction and has no edges leaving it is laid
+  out across the diagram's direction, not along it. A wrapper that holds every
+  node has no edges leaving it, so the whole drawing turns 90°. ELK ignores
+  subgraph direction and is unaffected, so a diagram checked only under ELK looks
+  right and then renders turned on GitHub, which always uses dagre. Measured
+  with `mmdc` 12.0.0 (Mermaid 12.2.0), three nodes in a chain:
+
+  | Source | dagre | ELK |
+  | -- | -- | -- |
+  | `flowchart LR`, no wrapper | 572 × 61, left to right | 552 × 61, left to right |
+  | `flowchart LR`, wrapper without `direction` | **238 × 376, top to bottom** | 568 × 109, left to right |
+  | `flowchart LR`, wrapper with `direction LR` | 697 × 131, left to right | 568 × 109, left to right |
+  | `flowchart TB`, wrapper without `direction` | **697 × 131, left to right** | 216 × 247, top to bottom |
+  | `flowchart TB`, wrapper with `direction TB` | 238 × 376, top to bottom | 216 × 247, top to bottom |
+
+  The r1.0.9 [light-card flowchart example](#flowchart-actual-white-backing-shape)
+  omitted the wrapper's `direction` and rendered 266 × 298, top to bottom, under
+  dagre; adding `direction LR` restored 586 × 140, left to right. Add the line
+  before you [compare engines](#choose-the-engine-per-diagram-after-rendering-both):
+  without it, the dagre render you are judging is the rotated one.
 
 - **Stacking blocks.** Invisible links between subgraphs order whole sections, such
   as a drawing, a rules strip, and a legend: `SG_BRACKET ~~~ SG_RULES ~~~ SG_LEGEND`.
   These links connect groups rather than nodes and are usually left unnamed;
-  comment them. Keep them invisible and inspect the final SVG.
+  comment them.
+
+## State diagrams
+
+The conventions above apply to `stateDiagram-v2` too, with these additions. All
+observations are from `mmdc` 12.0.0 bundling Mermaid 12.2.0, Chrome for Testing 156.
+
+- **Give states descriptive IDs and readable labels** with `state "Edit mode, idle" as MODE_EDIT_IDLE`. Transitions then use the ID, and the label can change freely.
+- **Name composite states like subgraphs:** `state "Menu" as SG_MENU { ... }`.
+- **`classDef` and `class` work on states.** A `classDef stateTerminal stroke-dasharray:6 4` drew a dashed border on the assigned state under both
+  engines.
+- **Several labelled starts in one region are fine:** `[*] --> VIEW_GALAXY: start-up`
+  and `[*] --> VIEW_ERROR: links could not load` both drew.
+
+### Parallel regions
+
+The `--` separator divides a composite state into regions that run at the same
+time. Put the regions inside one composite. Composite states drawn side by side at
+the top level, without `--`, mean the opposite: the machine is in **one** of them.
+Both versions render without errors (tested), so this mistake is invisible unless
+you check the meaning.
+
+```text
+stateDiagram-v2
+  [*] --> SG_APP
+  state "App" as SG_APP {
+    state "View" as SG_VIEW {
+      [*] --> VIEW_HOME
+    }
+    --
+    state "Mode" as SG_MODE {
+      [*] --> MODE_BROWSING
+    }
+  }
+```
+
+### Arrows into a nested composite move its states out
+
+A transition from outside a nested composite to a state **inside** it draws that
+state outside the box. In a minimal test, `IDLE --> INNER_B: shortcut` (with
+`INNER_B` declared inside `SG_INNER`) drew `INNER_B` below the box under both ELK
+and dagre, with exit code 0 and no error. The drawing then says the state is not
+part of the composite. Two fixes keep the meaning:
+
+1. **Aim the arrow at the composite** (`IDLE --> SG_INNER`) and let the composite's
+   own `[*]` choose the entry state, when that is what really happens.
+
+1. **Flatten the composite** when outside arrows really do enter different inner
+   states. Prefix the labels so the grouping survives in words, and give each
+   former member its own exit transition:
+
+   ```text
+   state "Menu: no panel selected" as MENU_NO_PANEL
+   state "Menu: link editor" as MENU_EDITOR
+   OVERLAY_NONE --> MENU_NO_PANEL: cog
+   OVERLAY_NONE --> MENU_EDITOR: editor shortcut
+   MENU_NO_PANEL --> OVERLAY_NONE: close
+   MENU_EDITOR --> OVERLAY_NONE: close
+   ```
+
+### Nested composites inside parallel regions are fragile
+
+A composite nested inside a region of another composite failed in ways that changed
+with small edits:
+
+| Variant | ELK | dagre |
+| -- | -- | -- |
+| Nested composite, no `[*]` inside, in a parallel region, plus arrows into it (a real 40-state diagram) | Exit 0, printed `<rect> attribute height: A negative value is not valid`, box missing | Exit 1, `No such shape: roundedWithTitle` |
+| Same real diagram with `[*]` added inside the nested composite | Rendered without errors, but the box was drawn empty because arrows entered its states ([previous section](#arrows-into-a-nested-composite-move-its-states-out)) | Same as ELK |
+| Minimal: nested composite in a parallel region, no arrows into it, no `[*]` | Exit 0, no errors (image not inspected) | Exit 1, `Cannot set properties of undefined (setting 'rank')` |
+| Same minimal diagram with `[*]` added | Exit 0, no errors (image not inspected) | Still exit 1, same error |
+| Minimal, no `[*]`, plus one arrow into an inner state | Exit 0, no errors (image not inspected) | Exit 0, no errors (image not inspected) |
+
+No single rule explains these results, so adding `[*]` is not a reliable fix.
+Prefer flat states with prefixed labels inside parallel regions. If you keep a
+nested composite there, render under both engines, use the render script's
+`CHECK` status, and open the image.
 
 ## Styles
 
-### Embed the stylesheet; retain semantic class assignments
+Name classes by role or meaning, such as `edgeEncrypted`, rather than by paint
+such as `redLine`. Use a small palette and define each class once per block.
 
-Use **one `themeCSS: |` block per diagram** inside its own YAML `config`. For the
-flowchart recipes, use `theme: base` and `look: classic`; ER and sequence controls
-are described separately in the diagram-type section. Put palette defaults in `themeVariables`, and
-custom shape, text, status, edge, and subgraph rules in embedded CSS. Prefer named
-CSS colors there when they provide the intended appearance; retain hex for exact
-shades. Color-related `themeVariables` use quoted hex instead. Choose export
-backgrounds explicitly, separately from theme calculation. A stylesheet never
-requires a separate file in this edition.
+### Assign classes with `class` statements
 
-**Do not create `classDef`, inline `style`, `linkStyle`, or inline `:::` statements.**
-Use bottom-of-block `class` statements for node roles, statuses, and subgraph groups.
-A class need not have a `classDef`: Mermaid emits its name into the SVG, where
-embedded CSS can select it. Define every assigned class in the stylesheet. Use one
-assignment per role/status, for example `class BACKUP_SERVER nodeServer` and
-`class BACKUP_SERVER statePending`. A comma-separated list is for element IDs,
-not class names: `class SERVER_01,SERVER_02 nodeServer`.
+Assign every class with a `class` statement at the bottom of the block. Inline
+`:::` is valid Mermaid, but this collection does not use it in new diagrams:
 
-Keep classes semantic (`nodeServer`, `statePending`, `groupSite`), not paint-based
-(`greenBox`). Mermaid element IDs remain uppercase; classes retain the naming table's
-camelCase prefixes. Preserve existing diagrams unless asked to convert them.
+- **Nodes gain classes as diagrams grow.** A node that starts with one role later
+  picks up a status. Inline `:::` cannot hold two classes, so assignments would end
+  up split between the declaration and the bottom.
+- **`class` is the only way to style subgraphs and named edges.** One mechanism for
+  everything is easier to review than two.
+- **One place to audit.** Every element with a class is listed on one line that can
+  be read, searched, and checked against the `classDef` list. Inline `:::` can also
+  hide inside edge lines (`A:::c --> B`).
+- **Status changes are one-line edits.** Commissioning a server means removing it
+  from the `statePending` line without touching its declaration.
+- **Cleaner diffs.** Label edits and style edits land on different lines.
+- **Shorter declarations.** Labels with HTML are long enough already.
 
-### Selector recipes for classic flowcharts
+The cost is keeping assignments in sync when an element is renamed or deleted; the
+[review checklist](#review-before-sharing) covers that.
 
-These selectors address Mermaid's generated SVG. They are not a universal DOM API.
-Recheck their matches and computed styles when changing Mermaid versions or looks.
+Historical flowchart class-syntax checks, verified with Mermaid 12.1:
 
-| Purpose | Selector pattern | Properties |
-| --- | --- | --- |
-| Node shape | `.node.nodeServer .label-container` | `fill`, `stroke`, `stroke-width` |
-| Node HTML label | `.node.nodeServer .nodeLabel` | `color` |
-| Node SVG label | `.node.nodeServer text` | `fill` |
-| Status border | `.node.statePending .label-container` | `stroke-dasharray` |
-| Site box | `.cluster.groupSite rect` | `fill`, `stroke`, `stroke-width` |
-| Site title HTML label | `.cluster.groupSite .nodeLabel` | `color` |
-| Site title SVG text | `.cluster.groupSite text` | `fill` |
-| Site title size | `.cluster.groupTitleLarge .cluster-label` | `font-size`, `font-weight` |
-| Named edge path | `.flowchart-link[data-id="edge_server_switch_data"]` | `stroke`, `stroke-width`, `stroke-dasharray` |
-| Named invisible helper | `path[data-id^="layout_"]` | `opacity`, `visibility` |
+| Syntax | Result |
+| -- | -- |
+| `subgraph G["Group"]:::groupStage` | Parse error. Use `class G groupStage`. |
+| `A:::c1:::c2` | Parse error. Use two `class` statements. |
+| `class B c1,c2` | No error, no style: `c1,c2` is read as one class name that matches nothing. |
 
-Invisible `~~~` paths can retain `data-id` while **omitting `flowchart-link`**.
-Therefore the helper rule deliberately selects `path[data-id^="layout_"]`, not
-`.flowchart-link[data-id^="layout_"]`. In a fixture that actually declares a named
-helper, require this selector to match at least one path and check its computed
-opacity and visibility. Only a diagram with no helpers may treat that rule as optional.
+For this collection's flowcharts, give an element two classes with two statements,
+`class B c1` and `class B c2`; comma-separated IDs go before the class name.
+ER has a separate documented multi-class syntax, so the historical flowchart table
+above must not be treated as an ER grammar rule.
 
-Use both HTML-label and SVG-text selectors in role rules so text and fill remain
-paired. The `.label-container` selector covers tested rectangles and cylinder
-outlines without accidentally filling the small empty rectangle inside `.label`.
-For an unfamiliar shape, inspect its SVG and add an explicit selector if needed.
-Do not paint every descendant `path`: that can color icons and unrelated details.
+### Role and status
 
-Use descendant (space) selectors and attribute selectors. **Convention: avoid the `>`
-child combinator** in `themeCSS`; the inherited guide observed configurations being
-dropped with it. Do not confuse that restriction with YAML's scalar syntax: use
-`themeCSS: |`, never `themeCSS: >`.
+Keep role and status distinct. For example, `nodeServer` can define fill and text,
+while `statePending` defines a dashed border. Avoid overlapping properties between
+classes on the same element; if overlap is intentional, inspect the resolved style.
+Include a visible status label such as `TBD` so color is not the only signal.
 
-### CSS precedence, role, and status
+Use descriptive edge IDs with named edge classes for selected connections instead
+of numeric `linkStyle` indexes; see the [reference convention](#naming) and its
+renderer compatibility exception. `linkStyle default` is useful for a shared baseline, but
+check that layout helpers remain invisible afterward.
 
-Mermaid generates its own scoped CSS and sometimes inline styles. Put `!important`
-on each custom appearance declaration in this edition, and keep semantic selectors
-specific (for example `.node.nodeServer .label-container`, rather than `rect`).
-This is a tested convention, not a guarantee against arbitrary host CSS. Do not
-combine these rules with legacy `classDef` or inline styles; their inline important
-values can win. Inspect computed styles if the expected appearance does not apply.
+### Choosing a palette
 
-A role owns fill, text color, border color, and border width. A status owns the dash
-pattern and still requires visible text such as `PLANNED`. Keep these property sets
-separate so CSS order does not silently change the role palette. Keep the stylesheet
-in role, status, edge, subgraph, then layout order. Do not rely on class-assignment
-order to resolve CSS conflicts.
+Use quoted hex colors in `themeVariables`; prefer readable CSS named colors in
+`classDef` where they provide the intended appearance. Retain precise hex colors
+for the starter's custom palette. Export backgrounds are an explicit rendering
+choice, separate from palette calculation; see the color/background decision table.
 
-CSS declaration semicolons are required by this convention. Mermaid statement
-semicolons remain omitted. Give each property its own line, including `!important`:
+Hard-coded fills and text colors must remain readable together in light and dark
+exports. A theme switch does not automatically redesign explicit `classDef` colors.
+Pick one of two strategies per diagram:
 
-```css
-.node.statePending .label-container {
-  stroke-dasharray: 6 4 !important;
-}
+- **Dark canvas** (the starter template). Set `darkMode: true` and a dark
+  `background`, and pair each fill with light text. Use CSS named colors when they
+  provide the intended appearance in CSS/class definitions; theme-variable
+  colors use quoted hex. Export with a matching background (`-b '#0b1120'` for the starter
+  template).
+- **Light card** (the MLB bracket). Use `background: "#ffffff"` in theme variables, use named CSS colors
+  such as `lavender` and `slateblue` for pale fills, strong strokes, and dark text,
+  and fill every subgraph white through its group class. Subgraph titles use dark
+  text, so the white fills keep them readable when the page around the diagram is
+  dark. Do not count on `background: white` alone: in the MLB bracket the theme
+  variable did not reliably paint the canvas. A borderless white wrapper subgraph
+  (see [page-level patterns](#page-level-patterns)) and `-b white` on export do.
+  Gray lines are the weak point of a light card on a dark page: `dimgray` edges
+  nearly disappeared outside the white areas, so keep edges inside filled containers.
+
+These conventions standardize names and structure; historical diagram palettes can
+remain different where their legends require it.
+
+### Legends
+
+When a diagram uses more than three or four node classes, build the legend inside
+the diagram: one swatch node per class, assigned the same class as the nodes it
+describes, in a `SG_LEGEND` subgraph with a compact layout verified in the chosen
+engine. Do not assume an invisible chain makes a row under ELK. Because
+the swatch and the nodes share a `classDef`, the legend cannot drift from the
+drawing. Edge meanings, which a node swatch cannot show, still go in a prose legend
+below the diagram.
+
+### Subgraph title size
+
+A `classDef` font size does not change a subgraph title. To resize a title, assign
+the subgraph a `group` class and target it from `themeCSS` with a descendant
+(space) selector:
+
+```text
+---
+config:
+  themeCSS: ".groupTitleLarge .cluster-label { font-size: 28px; }"
+---
+...
+class SG_SITE_A groupTitleLarge
 ```
 
-### Named edges and arrowheads
+Convention: avoid the `>` child combinator in this collection. With the init directive it caused the whole
+`themeCSS` value to be dropped without an error; avoid it in front matter too.
 
-**Do not rely on `class edge_name edgeData` for embedded CSS.** Mermaid can consume
-an edge class assignment without retaining that class on the SVG path. Name an edge
-in its Mermaid connection and select `.flowchart-link[data-id="edge_name"]` in CSS.
-The path qualifier avoids styling the separate edge-label element, which can share
-that `data-id`. Group several explicit selectors with commas when paths share a style.
-If the target SVG does not retain `data-id`, inspect it and document a tested selector
-for that viewer; do not silently substitute a numeric edge index.
+A title that looks larger does not prove the rule applied, because outer subgraph
+titles are already larger by default. Check the rendered SVG as described in
+[verifying a render](#verify-a-render).
 
-Edge CSS colors the path, **not automatically the arrowhead marker**. Keep the theme's
-`lineColor` readable so shared arrowheads remain visible. Do not recolor a shared
-marker to fix one edge: it can alter unrelated arrows. Preserve direction and patterns
-in the connection syntax, and inspect arrowheads, labels, and path styles separately.
-Do not claim matching colored markers unless actually verified.
+### Older class names
 
-### Choosing a palette and legends
+Diagrams written before these conventions use shorter class names. Keep them unless a
+rename is part of the change; when it is, use these equivalents.
 
-Choose either a dark canvas with light text, or a light card with dark text. Pair
-shape fills and text colors in the same role's CSS. Set the background in front matter
-and pass the same background to the renderer (`-b '#0b1120'` for the starter). The
-background variable alone does not reliably paint the export canvas. A light card
-on a dark page needs white-filled group boxes or a white wrapper to keep its labels
-and connectors readable. A theme change will not redesign explicit CSS colors.
-
-Do not communicate status or connection meaning only through color. Use labels,
-line patterns, and a prose edge legend. With more than four node-role classes, build
-a `SG_LEGEND` subgraph whose swatches have the same `class` assignments as the real
-nodes. Style that group through embedded CSS as well. This keeps the key and drawing
-synchronized without duplicating color rules.
+| Older name | Convention | Note |
+| -- | -- | -- |
+| `host` | `nodeServer` |  |
+| `network` | `nodeNetwork` |  |
+| `note` | `nodeNote` | Used for legend and annotation nodes |
+| `pending` | `statePending` plus a role class | The older class also set fill and text colors |
+| `confirmed` | A role class, plus a status class only if verification is shown | The older class mixed device role with verification status |
+| `encryptedPath` | `edgeEncrypted` |  |
+| `ipsecTunnel` | `edgeIpsecTunnel` |  |
+| `titlebig`, `titlemed`, `titlesm` | `groupTitleLarge`, `groupTitleMedium`, `groupTitleSmall` | Update the matching `themeCSS` selectors too |
 
 ## Color formats and background decisions
 
@@ -730,9 +923,9 @@ at the function syntax; normal browser CSS support does not establish support in
 Mermaid's `classDef` grammar. Escaped/function variants remain unverified here.
 
 | Context / intention | Choice | Reason / verification |
-| --- | --- | --- |
+| -- | -- | -- |
 | Color-related `themeVariables` | Quoted `"#RRGGBB"` | Official color-calculation contract; YAML validity alone is insufficient |
-| Embedded `themeCSS: |` | Named CSS color; unquoted hex for precision | Normal CSS declarations, semicolons, and this edition's selectors/precedence rules |
+| Embedded \`themeCSS: | \` | Named CSS color; unquoted hex for precision |
 | Standard-edition `classDef` color | Named CSS color or unquoted hex | Keep semantic role/status classes; test other color-function syntax before use |
 | CLI export canvas | `-b white` or `-b '#0b1120'` | CLI explicitly sets the export background; record implementation and inspect output |
 | Source-only light flowchart on dark UI | White-filled wrapper containing all nodes and edges | An actual SVG shape backs the content; outside margin may remain transparent |
@@ -837,7 +1030,7 @@ All color-related theme variables use quoted hex. Export with `-b white`, or add
 an actual SVG background rectangle, when the **whole canvas** must be opaque.
 
 | Type | Configuration and contrast controls | Background and compatibility |
-| --- | --- | --- |
+| -- | -- | -- |
 | Flowchart | `theme: base`, classic shapes, explicit layout; role fill/text and edge color | White-filled wrapper contains nodes and edges; verify label/title clearance in both engines |
 | ER | Native `erDiagram`, entity/attribute palettes, relationship labels/lines, cardinality markers | Native ER group provides a light card in tested 12.2.0; older versions need an opaque export fallback |
 | Sequence | Actor, signal, note and lifeline palette; native `sequence` options | Native white message `rect` plus light actors; outer margins remain transparent; ELK/Dagre do not lay out sequences |
@@ -853,7 +1046,9 @@ older renderers may not support the same class/subgraph syntax.
 
 The wrapper is intentionally presentational. Its label is a space, all semantic
 connections stay inside it, and its white fill is real SVG paint. It does not
-represent ownership or network isolation. Direction remains LR.
+represent ownership or network isolation. The wrapper repeats `direction LR`;
+without it, dagre lays the contents out top to bottom (see
+[page-level patterns](#page-level-patterns)).
 
 ```mermaid
 ---
@@ -868,28 +1063,18 @@ config:
     primaryTextColor: "#191970"
     lineColor: "#475569"
     edgeLabelBackground: "#ffffff"
-  themeCSS: |
-    .cluster.groupLight rect {
-      fill: white !important;
-      stroke: none !important;
-    }
-    .node.nodeService .label-container {
-      fill: aliceblue !important;
-      stroke: steelblue !important;
-    }
-    .node.nodeService .nodeLabel,
-    .node.nodeService text {
-      color: midnightblue !important;
-      fill: midnightblue !important;
-    }
 ---
 %% A source-only light card; wrapper has no domain meaning.
 flowchart LR
   subgraph SG_LIGHT[" "]
+    %% Repeat the flowchart's direction: dagre turns a wrapper without one.
+    direction LR
     CLIENT_APP["Client"]
     SERVICE_API["API"]
     CLIENT_APP -->|"Request"| SERVICE_API
   end
+  classDef nodeService fill:aliceblue,stroke:steelblue,color:midnightblue
+  classDef groupLight fill:white,stroke:none
   class CLIENT_APP,SERVICE_API nodeService
   class SG_LIGHT groupLight
 ```
@@ -928,50 +1113,6 @@ config:
     clusterBorder: "#ffffff"
     attributeBackgroundColorOdd: "#ffffff"
     attributeBackgroundColorEven: "#f1f5f9"
-  themeCSS: |
-    .cluster rect {
-      fill: white !important;
-      stroke: none !important;
-    }
-    .node .outer-path path[fill]:not([fill="none"]) {
-      fill: aliceblue !important;
-    }
-    .node .outer-path path[fill="none"] {
-      stroke: steelblue !important;
-    }
-    .row-rect-odd path[fill]:not([fill="none"]) {
-      fill: white !important;
-    }
-    .row-rect-even path[fill]:not([fill="none"]) {
-      fill: whitesmoke !important;
-    }
-    .row-rect-odd path[fill="none"],
-    .row-rect-even path[fill="none"],
-    .divider path {
-      stroke: slategray !important;
-    }
-    .node .nodeLabel,
-    .node text {
-      color: midnightblue !important;
-      fill: midnightblue !important;
-    }
-    .edgeLabel span,
-    .edgeLabel text {
-      color: midnightblue !important;
-      fill: midnightblue !important;
-      background-color: white !important;
-    }
-    .relationshipLine {
-      stroke: slategray !important;
-    }
-    marker.er path {
-      stroke: slategray !important;
-      fill: none !important;
-    }
-    marker.er circle {
-      stroke: slategray !important;
-      fill: white !important;
-    }
 ---
 %% ER grouping is native syntax in the tested 12.2.0 build.
 erDiagram
@@ -986,6 +1127,8 @@ erDiagram
       int account_id FK
     }
   end
+  classDef nodeEntity stroke:steelblue,color:midnightblue
+  class ACCOUNT,REQUEST nodeEntity
 ```
 
 ### Sequence: native controls and tested CSS
@@ -1016,30 +1159,6 @@ config:
     signalTextColor: "#191970"
     noteBkgColor: "#ffffff"
     noteTextColor: "#191970"
-  themeCSS: |
-    rect.actor {
-      fill: aliceblue !important;
-      stroke: slategray !important;
-    }
-    text.actor,
-    text.actor tspan {
-      fill: midnightblue !important;
-    }
-    .messageText {
-      fill: midnightblue !important;
-    }
-    .actor-line,
-    .messageLine0,
-    .messageLine1 {
-      stroke: slategray !important;
-    }
-    .note {
-      fill: white !important;
-      stroke: slategray !important;
-    }
-    .noteText {
-      fill: midnightblue !important;
-    }
 ---
 %% White backing for messages; actors have their own opaque fills.
 sequenceDiagram
@@ -1052,8 +1171,8 @@ sequenceDiagram
   end
 ```
 
-The ER/sequence selectors above are independent of the flowchart role selectors.
-No flowchart `classDef`, inline `style`, or `linkStyle` statements are introduced.
+The flowchart and ER examples retain this edition's `classDef`/`class` conventions;
+sequence styling uses its native supported palette and region syntax.
 
 ## Starter template
 
@@ -1061,123 +1180,44 @@ This retained dark-palette example expects a matching dark host or an explicit
 opaque dark export. For live source on both host themes, use the light-card
 examples above. A `background` theme variable alone does not paint its outer canvas.
 
-This self-contained flowchart shows two sites, data connections, a management
-request, and a planned backup server. It is an illustrative topology, not a claim
-about access policy, actual backup operation, speed, or redundancy. Copy the complete
-fenced block. Its CSS selector contract is `look: classic`, Mermaid 12.2.0; also
-verify the viewer in which the Markdown will be presented.
+This example shows two sites, a carrier connection, a management path, and a planned
+backup server. It demonstrates front matter, stable IDs, named edges, separate
+role/status classes, and a shared dark palette. Replace the example topology with
+verified relationships; these connections do not specify firewall rules, VLANs,
+redundancy, or actual capacity.
+
+Named-edge syntax was checked with `mmdc 12.0.0`; also check the intended Markdown
+viewer. Copy the whole block so its configuration and style assignments travel with it.
 
 ```mermaid
 ---
+# Explicit class colors at the bottom supplement the theme; changing only
+# the theme will not recolor those classes. Match the export canvas with
+# -b '#0b1120'.
 config:
-  # Base supports explicit theme defaults beneath the CSS overrides.
+  # The only built-in theme meant to be customized.
   theme: base
-  # The selector recipes below target classic flowchart shapes.
+  # Stabilize the selector/shape contract for this tested template.
   look: classic
-  # Keep owned nodes within their site boxes where supported.
+  # ELK keeps nodes inside their subgraphs. It ignores flowchart.curve,
+  # so no curve is set.
   layout: elk
-  # Supply readable defaults, including neutral arrowhead markers.
+  # Hex colors are quoted: an unquoted # starts a YAML comment.
   themeVariables:
     darkMode: true
     background: "#0b1120"
+    primaryColor: "#17243b"
     primaryTextColor: "#e6edf7"
+    primaryBorderColor: "#60a5fa"
     textColor: "#e6edf7"
     lineColor: "#94a3b8"
     edgeLabelBackground: "#111827"
     clusterBkg: "#111827"
     clusterBorder: "#475569"
     titleColor: "#e6edf7"
-  # Leave space between nodes, ranks, and the site titles.
   flowchart:
     nodeSpacing: 35
     rankSpacing: 55
-    subGraphTitleMargin:
-      top: 8
-      bottom: 12
-  # All custom appearance travels with this diagram as ordinary CSS.
-  themeCSS: |
-    .node.nodeNetwork .label-container {
-      fill: darkslateblue !important;
-      stroke: lightskyblue !important;
-      stroke-width: 2px !important;
-    }
-    .node.nodeNetwork .nodeLabel,
-    .node.nodeNetwork text {
-      color: aliceblue !important;
-      fill: aliceblue !important;
-    }
-    .node.nodeServer .label-container {
-      fill: darkslategray !important;
-      stroke: aquamarine !important;
-      stroke-width: 2px !important;
-    }
-    .node.nodeServer .nodeLabel,
-    .node.nodeServer text {
-      color: honeydew !important;
-      fill: honeydew !important;
-    }
-    .node.nodeStorage .label-container {
-      fill: indigo !important;
-      stroke: plum !important;
-      stroke-width: 2px !important;
-    }
-    .node.nodeStorage .nodeLabel,
-    .node.nodeStorage text {
-      color: lavender !important;
-      fill: lavender !important;
-    }
-    .node.nodeOperator .label-container {
-      fill: midnightblue !important;
-      stroke: cyan !important;
-      stroke-width: 2px !important;
-    }
-    .node.nodeOperator .nodeLabel,
-    .node.nodeOperator text {
-      color: lightcyan !important;
-      fill: lightcyan !important;
-    }
-    /* Status changes the border pattern, not the server's role colors. */
-    .node.statePending .label-container {
-      stroke-dasharray: 6 4 !important;
-    }
-    /* Data paths share a rule; named paths do not need edge classes. */
-    .flowchart-link[data-id="edge_site_a_app_sw_data"],
-    .flowchart-link[data-id="edge_site_a_db_sw_data"],
-    .flowchart-link[data-id="edge_site_a_sw_fw_data"],
-    .flowchart-link[data-id="edge_site_a_fw_carrier_data"],
-    .flowchart-link[data-id="edge_site_b_fw_carrier_data"],
-    .flowchart-link[data-id="edge_site_b_sw_fw_data"] {
-      stroke: lightslategray !important;
-      stroke-width: 2px !important;
-    }
-    .flowchart-link[data-id="edge_site_a_admin_fw_management"] {
-      stroke: cyan !important;
-      stroke-width: 2px !important;
-      stroke-dasharray: 3 3 !important;
-    }
-    .flowchart-link[data-id="edge_site_b_backup_sw_planned"] {
-      stroke: gold !important;
-      stroke-width: 2px !important;
-      stroke-dasharray: 6 4 !important;
-    }
-    .cluster.groupSite rect {
-      fill: #111827 !important;
-      stroke: lightslategray !important;
-      stroke-width: 1px !important;
-    }
-    .cluster.groupSite .nodeLabel,
-    .cluster.groupSite text {
-      color: aliceblue !important;
-      fill: aliceblue !important;
-    }
-    .cluster.groupTitleLarge .cluster-label {
-      font-size: 20px !important;
-    }
-    /* Hide named helpers even if a broad edge rule is added later. */
-    path[data-id^="layout_"] {
-      opacity: 0 !important;
-      visibility: hidden !important;
-    }
 ---
 %% Two sites joined by a carrier network, with a management path and a
 %% planned backup server. Replace with verified topology before use.
@@ -1202,6 +1242,22 @@ flowchart TB
     SITE_B_BACKUP_01["Backup server - PLANNED"]
   end
 
+  %% Legend swatches reuse the device role classes below.
+  subgraph SG_LEGEND["Node roles"]
+    direction TB
+    LEGEND_NETWORK["Network"]
+    LEGEND_SERVER["Server"]
+    LEGEND_STORAGE[("Storage")]
+    LEGEND_OPERATOR["Operator"]
+    LEGEND_EXTERNAL["External"]
+
+    %% Layout only: stack swatches compactly; these are not network links.
+    LEGEND_NETWORK layout_legend_network_server@~~~ LEGEND_SERVER
+    LEGEND_SERVER layout_legend_server_storage@~~~ LEGEND_STORAGE
+    LEGEND_STORAGE layout_legend_storage_operator@~~~ LEGEND_OPERATOR
+    LEGEND_OPERATOR layout_legend_operator_external@~~~ LEGEND_EXTERNAL
+  end
+
   %% 2. Data path: solid double arrows mean bidirectional connectivity.
   %% Labels describe link purpose, not measured speed or verified access policy.
   %% Name edges that share styles; names survive unrelated edge insertions.
@@ -1222,47 +1278,210 @@ flowchart TB
   %% Do not imply that backups already run merely because this node is present.
   SITE_B_BACKUP_01 edge_site_b_backup_sw_planned@---|"Planned attachment"| SITE_B_SW_01
 
-  %% Assign semantic classes; all definitions are in themeCSS above.
-  class SITE_A_SW_01,SITE_A_FW_01,SITE_B_FW_01,SITE_B_SW_01,WAN_CARRIER nodeNetwork
+  %% 5. Layout helpers: none are needed here. Add them only after rendering.
+  %% Keep any future ~~~ links in the owning group, name them layout_*, and
+  %% assign classDef layoutOnly opacity:0 if global strokes make them visible.
+  %% A layout link must never substitute for an actual prerequisite or data path.
+
+  %% 6. Node roles: fill and text are paired for contrast on the dark canvas.
+  %% Status is separate below; role classes deliberately leave dash patterns unset.
+  classDef nodeNetwork fill:#172b46,stroke:#60a5fa,color:#eff6ff,stroke-width:2px
+  classDef nodeServer fill:#113832,stroke:#2dd4bf,color:#f0fdfa,stroke-width:2px
+  classDef nodeStorage fill:#29213f,stroke:#a78bfa,color:#f5f3ff,stroke-width:2px
+  classDef nodeOperator fill:#12313d,stroke:#22d3ee,color:#ecfeff,stroke-width:2px
+  classDef nodeExternal fill:#202b3d,stroke:#94a3b8,color:#e2e8f0,stroke-width:2px
+
+  %% Status changes the border pattern without replacing the server's role colors.
+  %% When commissioned, remove both this class assignment and the PLANNED label.
+  classDef statePending stroke-dasharray:6 4
+
+  %% Edge meaning: preserve labels and patterns so meaning does not rely on color.
+  classDef edgeData stroke:#94a3b8,stroke-width:2px
+  classDef edgeManagement stroke:#22d3ee,stroke-width:2px
+  classDef edgePlanned stroke:#fbbf24,stroke-width:2px,stroke-dasharray:6 4
+  classDef groupSite fill:#111827,stroke:#475569,stroke-width:1px
+  classDef groupLegend fill:#111827,stroke:#475569,stroke-width:1px
+  classDef layoutOnly opacity:0
+
+  %% 7. Assignments: keep these synchronized when deleting or renaming elements.
+  %% A node may have a role and a status, each in its own class statement.
+  class SITE_A_SW_01,SITE_A_FW_01,SITE_B_FW_01,SITE_B_SW_01 nodeNetwork
   class SITE_A_APP_01,SITE_B_BACKUP_01 nodeServer
   class SITE_A_DB_01 nodeStorage
   class SITE_A_ADMIN_01 nodeOperator
+  class WAN_CARRIER nodeExternal
   class SITE_B_BACKUP_01 statePending
   class SG_SITE_A,SG_SITE_B groupSite
-  class SG_SITE_A,SG_SITE_B groupTitleLarge
+  class LEGEND_NETWORK nodeNetwork
+  class LEGEND_SERVER nodeServer
+  class LEGEND_STORAGE nodeStorage
+  class LEGEND_OPERATOR nodeOperator
+  class LEGEND_EXTERNAL nodeExternal
+  class SG_LEGEND groupLegend
+  class layout_legend_network_server,layout_legend_server_storage layoutOnly
+  class layout_legend_storage_operator,layout_legend_operator_external layoutOnly
+
+  class edge_site_a_app_sw_data,edge_site_a_db_sw_data,edge_site_a_sw_fw_data edgeData
+  class edge_site_a_fw_carrier_data,edge_site_b_fw_carrier_data,edge_site_b_sw_fw_data edgeData
+  class edge_site_a_admin_fw_management edgeManagement
+  class edge_site_b_backup_sw_planned edgePlanned
 ```
 
-**Legend:** solid double arrows show bidirectional data connectivity. The dotted cyan
-arrow shows management initiation; the dashed gold line shows a planned connection.
-Arrowheads retain the neutral theme color. The backup server's dashed border and
-`PLANNED` label identify its status. Site boxes group ownership, not isolation.
+**Legend:** solid double arrows show bidirectional data connectivity; the dotted cyan
+arrow shows management initiation; the dashed amber line shows a planned attachment.
+The backup server's dashed border and `PLANNED` label describe its status, not its role.
+Site boxes group ownership; they do not establish network isolation.
 
-To adapt this template:
+To adapt the template:
 
-1. Replace quoted labels and actual relationships before adjusting layout.
-1. Retain stable node and named-edge IDs. On edge renames, update `data-id` selectors
-   in `themeCSS` as well as the connection statement.
-1. Add or remove node and group assignments at the bottom. A second status needs its
-   own `class` statement and its own CSS rule; do not merge its palette into a role.
-1. Remove the planned label, status assignment, and planned connection pattern
-   together when commissioning the backup server.
-1. Render SVG and PNG with matching background `-b '#0b1120'`. Check rule retention,
-   selector matches, computed styles, labels, containment, and arrowheads.
+1. Replace site names, devices, and labels; add addresses or interfaces only when useful.
+1. Update real connections and their labels before adjusting layout. A connection to
+   a site box means something different from a connection to its firewall.
+   Write each chain from inside the site toward the shared network so that uplinks
+   leave through the bottom of the site box instead of crossing its centered title.
+1. Add each new element to the appropriate class assignments. If a planned component
+   becomes active, update its label, status assignment, and planned edge together.
+1. Render the complete diagram, then follow [Layout](#layout) if placement is wrong.
+1. Inspect labels, arrowheads, dashed status borders, and containment in the target
+   viewer. Export with `-b '#0b1120'` for a matching dark canvas; see the
+   [export reference](mermaid-reference.md#match-a-github-or-vs-code-dark-appearance).
+
+## Worked example: network overlay
+
+This light-card flowchart is the transport view from the
+[Tailscale on Debian 13 guide](../remote-access/tailscale-debian-13.md#transport-view),
+reduced to what it teaches. Where the [starter template](#starter-template) shows a
+dark palette and site boundaries, this one shows the patterns from
+[labels and relationships](#labels-and-relationships) together:
+
+- A wrapper subgraph that repeats the flowchart's `direction`
+  ([page-level patterns](#page-level-patterns)).
+- Shared hops (both NATs) on the outside and three
+  [alternative routes](#alternative-paths) between them, numbered by precedence
+  and grouped in `SG_PATHS`.
+- [Two-way edges](#one-edge-per-relationship) (`<-->`) with IDs and classes.
+- Role classes named for meaning (`nodeEndpoint`, `nodeBoundary`, `edgeRelay`) in
+  pale fills with dark text, so it reads on a light or dark page.
+- The engine choice and its reason in the front matter.
+
+```mermaid
+---
+config:
+  # The only built-in theme meant to be customized.
+  theme: base
+  look: classic
+  # Rendered under both engines with the wrapper direction set: dagre keeps
+  # routes 1-2-3 top to bottom; elk reversed them. GitHub uses dagre.
+  layout: dagre
+  # Light card: hex values participate in Mermaid's color calculations.
+  themeVariables:
+    darkMode: false
+    background: "#ffffff"
+    primaryTextColor: "#191970"
+    textColor: "#191970"
+    lineColor: "#475569"
+    edgeLabelBackground: "#ffffff"
+    clusterBkg: "#f8fafc"
+    clusterBorder: "#cbd5e1"
+  flowchart:
+    htmlLabels: true
+---
+%% Data-plane paths only. Every path crosses both NATs; the three middle
+%% routes are alternatives, tried in order: direct, peer relay, DERP.
+flowchart LR
+  subgraph SG_CARD[" "]
+    %% Repeat the flowchart direction: dagre turns a wrapper without one.
+    direction LR
+    CLIENT_NODE["Client node"]
+    CLIENT_NAT["Client NAT<br/>or firewall"]
+
+    subgraph SG_PATHS["Path between the NATs"]
+      DIRECT_PATH["Direct UDP<br/>NAT traversal"]
+      PEER_RELAY["Peer relay<br/>optional"]
+      DERP_RELAY["DERP relay<br/>fallback"]
+    end
+
+    HOST_NAT["Host NAT<br/>or firewall"]
+    DEBIAN_HOST["Debian node"]
+
+    CLIENT_NODE edge_client_nat_wireguard@<-->|"WireGuard"| CLIENT_NAT
+
+    CLIENT_NAT edge_client_nat_direct@<-->|"1 preferred"| DIRECT_PATH
+    DIRECT_PATH edge_direct_host_nat@<--> HOST_NAT
+    CLIENT_NAT edge_client_nat_peer_relay@<-->|"2 if configured"| PEER_RELAY
+    PEER_RELAY edge_peer_relay_host_nat@<--> HOST_NAT
+    CLIENT_NAT edge_client_nat_derp@<-->|"3 last resort"| DERP_RELAY
+    DERP_RELAY edge_derp_host_nat@<--> HOST_NAT
+
+    HOST_NAT edge_host_nat_host_wireguard@<-->|"WireGuard"| DEBIAN_HOST
+  end
+
+  classDef nodeEndpoint fill:aliceblue,stroke:steelblue,color:midnightblue,stroke-width:2px
+  classDef nodeNetwork fill:honeydew,stroke:seagreen,color:darkgreen,stroke-width:2px
+  classDef nodeBoundary fill:whitesmoke,stroke:dimgray,color:black,stroke-width:2px
+
+  classDef edgeEncrypted stroke:steelblue,stroke-width:3px
+  classDef edgeRelay stroke:seagreen,stroke-width:2px
+
+  classDef groupCard fill:white,stroke:none
+  classDef groupScope fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px
+
+  class CLIENT_NODE,DEBIAN_HOST nodeEndpoint
+  class DIRECT_PATH,PEER_RELAY,DERP_RELAY nodeNetwork
+  class CLIENT_NAT,HOST_NAT nodeBoundary
+
+  class edge_client_nat_wireguard,edge_host_nat_host_wireguard edgeEncrypted
+  class edge_client_nat_direct,edge_direct_host_nat edgeEncrypted
+  class edge_client_nat_peer_relay,edge_peer_relay_host_nat edgeRelay
+  class edge_client_nat_derp,edge_derp_host_nat edgeRelay
+
+  class SG_CARD groupCard
+  class SG_PATHS groupScope
+```
+
+**Legend:** blue paths carry WireGuard traffic directly between the NATs; green
+paths go through a relay. All three middle paths carry the same end-to-end
+encrypted packets.
+
+Three node classes need no in-diagram legend ([legends](#legends)); edge meaning
+goes in the prose line above because a node swatch cannot show a line style. The
+same IDs (`CLIENT_NODE`, `DEBIAN_HOST`, `PEER_RELAY`, `DERP_RELAY`) appear in the
+guide's other two diagrams, so a reader can match them across views.
 
 ## Review before sharing
 
+**A clean render is not a correct diagram.** In the r1.0.9 tests, three diagrams
+rendered without errors and were still wrong: arrows that contradicted the
+document's own rules, a missing write step and missing failure paths in a sequence,
+and states that a layout engine had moved out of their composite. Check meaning
+separately from rendering:
+
+- **Compare every arrow and transition with the source of truth** (the code, the
+  configuration, or the system being drawn), not with your memory of it. Cite the
+  source in the prose where you can.
+- **Read the diagram against the surrounding prose.** If the text says only the store
+  writes the map, no arrow may show a screen writing it.
+- **Check what the layout did to grouping.** A node drawn outside its box, or a box
+  drawn empty, changes what the diagram claims even when the source is right.
+- **Show failure paths** in sequence and state diagrams when the reader will rely on
+  them (`alt`, `opt`, error states), not only the happy path.
+- **Check that alternative routes cross the same shared hops**, and that their
+  labels state precedence. A route drawn around a hop claims it skips it; see
+  [alternative paths](#alternative-paths).
+- **Check each arrow's direction against what flows.** Configuration points into
+  the service that loads it. Check every `optional` label against
+  [labels must stay true](#labels-must-stay-true).
+
+Then the mechanical checks:
+
 - Confirm each node's label is defined once and all IDs are distinct.
-- Check that every class assignment names an existing node or subgraph and a class
-  addressed by `themeCSS`. Check each edge selector against an existing named path.
-- Confirm one embedded `themeCSS: |` block, `theme: base`, and `look: classic` for
-  the flowchart selector recipes. No external CSS dependency is needed.
-- Confirm no `classDef`, inline `style`, or `linkStyle` Mermaid statements were added.
-- Verify CSS uses semicolons, one property per line, and `!important` for appearance.
-- Check HTML-label `color` and SVG-text `fill`; checking shape fill alone is insufficient.
+- Use descriptive, stable IDs rather than numeric or order-based names. Reference
+  styled edges by ID and named class; document any renderer compatibility exception
+  requiring numeric `linkStyle` indexes and recheck those indexes after edge edits.
+- Check that every class assignment names an existing element and defined class.
 - Recheck assignments after removing or renaming an edge or node.
 - Verify arrows, labels, and legends describe the real workflow or topology.
-- Confirm front matter starts the block and hex values in YAML settings are quoted.
-  Hex values inside the CSS literal use normal unquoted CSS syntax.
+- Confirm the front matter is the block's first line and every hex color in it is quoted.
 - Check emoji against [emoji in labels](#emoji-in-labels): labels only, each beside
   matching text, from the vocabulary, with no shortcodes or multi-part sequences.
 - Check for bare `%%` comment lines: `grep -nE '^\s*%%\s*$' file.md` prints nothing.
@@ -1275,12 +1494,25 @@ To adapt this template:
   chain. A stale chain can collapse a subgraph to a sliver or pull the node back
   into its old box.
 - Render in the target viewer and inspect wrapping, containment, arrowheads, and contrast.
-  Require cross-boundary edges to clear group titles and node labels.
+- Treat any printed `Error` line as a failure, even when `mmdc` exits 0.
+- For diagrams with a `layout` setting, render under both ELK and dagre, and record
+  in the front matter which one you kept and why.
+- Check that every wrapper subgraph declares the same `direction` as the flowchart,
+  then confirm the dagre render runs the declared way (wider than tall for `LR`).
+  Without it, dagre turns the drawing 90°; see [page-level patterns](#page-level-patterns).
+- Check that no two edges join the same pair of nodes in opposite directions with
+  the same meaning; merge them into one [two-way edge](#one-edge-per-relationship).
+- In sequence diagrams, search message text for `;`.
+- In state diagrams, check that no arrow from outside a nested composite targets a
+  state inside it, and that parallel regions use `--` inside one composite.
 - For a diagram that may be read on a dark page, export with `-b transparent` and
   check the PNG composited over a dark color, for example
   `magick out.png -background '#0d1117' -flatten out-on-dark.png`
-  (ImageMagick 6: `convert`).
-- Confirm CSS rule retention in the SVG and computed browser styles, not only appearance; see
+  (ImageMagick 6: `convert`). Without ImageMagick, Pillow does the same:
+  `python3 -c "from PIL import Image; i=Image.open('out.png').convert('RGBA'); b=Image.new('RGBA',i.size,(13,17,23,255)); b.alpha_composite(i); b.convert('RGB').save('out-on-dark.png')"`.
+  Check the parts outside any white backing: in a tested state diagram, the outer
+  start dot and its arrow nearly vanished on the dark color.
+- Confirm styles and `themeCSS` rules in the rendered SVG rather than by eye; see
   [verifying a render](#verify-a-render).
 - Record what was actually verified: source accuracy, a successful render, measured
   layout, and visual inspection are separate claims. Note the viewer and its Mermaid
@@ -1340,45 +1572,57 @@ Then:
 
 ### Verify a render
 
-A successful render proves accepted syntax, not successful styling. Verify all of:
+A successful render proves the syntax was accepted. It does not prove that each
+style reached the intended element, and a dropped configuration setting produces
+no error.
 
-1. **Rule retention:** custom selectors and declarations appear in the SVG's style
-   element. A dropped YAML scalar can otherwise leave an apparently valid diagram.
-1. **Selector matches:** each required selector matches its intended SVG element.
-   An edge path and its label can share `data-id`; keep `.flowchart-link` in the selector.
-1. **Computed appearance:** load the SVG in a browser and inspect `getComputedStyle`.
-   This proves the CSS cascade selected the intended values. Inline `style` attributes
-   can be empty when embedded CSS works correctly; do not use the old inline-edge-style
-   procedure as the CSS edition's success test.
-1. **Visual result:** open the browser-rendered PNG. Check wrapping, contrast, glyphs,
-   arrowheads, legends, group containment, and invisible helpers.
+Render the edited block to SVG and record the CLI version:
 
-For example, in the browser console with the rendered SVG open:
-
-```javascript
-const svg = document.querySelector('svg');
-const edge = svg.querySelector('.flowchart-link[data-id="edge_site_a_admin_fw_management"]');
-if (!edge) throw new Error('Named management path selector matched nothing');
-const edgeStyle = getComputedStyle(edge);
-console.log(edgeStyle.stroke, edgeStyle.strokeWidth, edgeStyle.strokeDasharray);
-const server = svg.querySelector('.node.nodeServer.statePending .label-container');
-if (!server) throw new Error('Pending server shape selector matched nothing');
-console.log(getComputedStyle(server).strokeDasharray);
-const label = svg.querySelector('.node.nodeServer .nodeLabel');
-if (label) console.log(getComputedStyle(label).color);
+```bash
+review_dir=$(mktemp -d /tmp/mermaid-review.XXXXXX)
+mmdc --version > "$review_dir/cli-version.txt"
+mmdc -i diagram.mmd -o "$review_dir/review.svg" -b '#0b1120'
 ```
 
-For the starter, expect management stroke `rgb(0, 255, 255)` (cyan), width `2px`,
-and dash array equivalent to `3px, 3px`. Expect the pending server border dash array
-`6px, 4px`. Browser serialization can use commas, spaces, RGB values, or pixel units;
-compare normalized values rather than requiring a literal source spelling.
+Add `-p` with a browser configuration if Mermaid's headless browser is not installed;
+see [browser troubleshooting](mermaid-install.md#chromium-fails-to-start). If the
+browser cannot start, report the render as unverified rather than relying on a
+syntax check.
 
-Check **each** custom role and status, the site box and title, every named-edge rule,
-and any layout helper. Inspect shared arrowheads separately: path colors do not
-propagate to markers. A stylesheet rule appearing in the SVG does not establish that
-it matched or won the cascade. A successful computed-style test does not replace
-opening the PNG. Report the renderer, Mermaid library version, exact checks run,
-and anything unverified. Re-render after the last change.
+In the tested class-based flowchart renders, edge class names were consumed and
+styles resolved inline. Verify this in the actual renderer; it is not a permanent
+SVG-class API.
+List each named edge with the styles it received:
+
+```bash
+python3 - "$review_dir/review.svg" <<'EOF'
+import re, sys
+svg = open(sys.argv[1], encoding='utf-8').read()
+for tag in re.findall(r'<path[^>]*\bdata-id="[^"]+"[^>]*>', svg):
+    edge = re.search(r'data-id="([^"]+)"', tag).group(1)
+    style = re.search(r'style="([^"]*)"', tag)
+    applied = re.findall(r'stroke(?:-width|-dasharray)?:[^;\s][^;]*', style.group(1) if style else '')
+    print(f'{edge}: {"; ".join(applied) or "(no class style)"}')
+EOF
+```
+
+For the starter template, every `_data` edge should report `stroke:#94a3b8`, the
+management edge `stroke:#22d3ee`, and the planned edge `stroke-dasharray:6 4`.
+
+To confirm the front matter was read, check that the SVG uses the configured canvas
+or theme colors rather than Mermaid's defaults; an ignored block renders with the
+default theme and no error.
+
+For `themeCSS`, search the SVG for the rule itself. `mmdc` removes the spaces
+around braces and after colons, so search for the compacted form:
+
+```bash
+grep -o '\.groupTitleLarge \.cluster-label{[^}]*}' "$review_dir/review.svg"
+```
+
+No output means this pattern did not find the rule; inspect the actual style text
+before concluding it was dropped. Check punctuation and selector rewriting. Re-render after the last edit, then open the image in the
+intended viewer. Neither check replaces looking at the drawing.
 
 ## Appendix: Emoji vocabulary for diagrams
 
@@ -1388,8 +1632,8 @@ the glyph from this table rather than retyping it. Arrow emoji are left out on
 purpose (see [emoji in labels](#emoji-in-labels)).
 
 | Emoji | Code points | Meaning |
-| ----- | ----------- | ------- |
-| **Status** | | |
+| -- | -- | -- |
+| **Status** |  |  |
 | ✅ | `U+2705` | Complete, passed, or verified |
 | ❌ | `U+274C` | Failed or rejected |
 | ⚠️ | `U+26A0 U+FE0F` | Warning or caution |
@@ -1398,7 +1642,7 @@ purpose (see [emoji in labels](#emoji-in-labels)).
 | ⏸️ | `U+23F8 U+FE0F` | Paused |
 | ⛔ | `U+26D4` | Blocked or prohibited |
 | 🚨 | `U+1F6A8` | Active incident or alert |
-| **Systems and services** | | |
+| **Systems and services** |  |  |
 | 🖥️ | `U+1F5A5 U+FE0F` | Server, host, or console |
 | 💻 | `U+1F4BB` | Workstation or client |
 | ⚙️ | `U+2699 U+FE0F` | Service, process, or settings |
@@ -1407,7 +1651,7 @@ purpose (see [emoji in labels](#emoji-in-labels)).
 | ☁️ | `U+2601 U+FE0F` | Cloud service or hosted resource |
 | 🐳 | `U+1F433` | Container or container image |
 | 📦 | `U+1F4E6` | Package or artifact |
-| **Networking** | | |
+| **Networking** |  |  |
 | 🌐 | `U+1F310` | Network, internet, or DNS |
 | 🔌 | `U+1F50C` | Physical link or port |
 | 📡 | `U+1F4E1` | Wireless or radio link |
@@ -1415,7 +1659,7 @@ purpose (see [emoji in labels](#emoji-in-labels)).
 | 🚦 | `U+1F6A6` | Traffic policy or QoS |
 | 🧱 | `U+1F9F1` | Firewall or network boundary |
 | 🗺️ | `U+1F5FA U+FE0F` | Topology, site, or map |
-| **Security and operations** | | |
+| **Security and operations** |  |  |
 | 🛡️ | `U+1F6E1 U+FE0F` | Security control or protection |
 | 🔒 | `U+1F512` | Encryption or restricted access |
 | 🔑 | `U+1F511` | Credential, key, or certificate |
@@ -1428,14 +1672,55 @@ purpose (see [emoji in labels](#emoji-in-labels)).
 | 🧪 | `U+1F9EA` | Test or experiment |
 | 🔍 | `U+1F50D` | Inspection or review |
 | 🚀 | `U+1F680` | Release or deployment |
-| **Notes** | | |
+| **Notes** |  |  |
 | 📝 | `U+1F4DD` | Note or documentation |
 | 💡 | `U+1F4A1` | Tip or idea |
 | 📌 | `U+1F4CC` | Important reference |
 
 ## Revision history
 
-**CSS r1.0.7 (Oct. 25, 2026).** Corrected theme-variable color scope, separated
+**r1.1.0 (Nov. 22, 2026).** Lessons from rebuilding the four diagrams in the
+Tailscale and Headscale guides (`remote-access/`), reproduced with `mmdc` 12.0.0
+(bundling Mermaid 12.2.0) and Brave as the Puppeteer browser:
+
+- Under dagre, a wrapper subgraph without its own `direction` turns the whole
+  diagram 90°; ELK is unaffected. Measured in
+  [page-level patterns](#page-level-patterns), added to the engine comparison
+  and the review checklist. Corrected the light-card flowchart example, which
+  omitted the line and rendered top to bottom under dagre.
+- New subsections under [labels and relationships](#labels-and-relationships):
+  one two-way edge per relationship (`<-.->` and `<-->` with edge IDs, tested),
+  alternative paths drawn through shared hops with numbered precedence, arrow
+  direction for configuration, and labels that stay true.
+- New [worked example: network overlay](#worked-example-network-overlay), a
+  light-card flowchart combining these patterns.
+- Review checklist: alternative routes, arrow direction, `optional` labels, and
+  merged opposite edges.
+
+**r1.0.9 (Nov. 20, 2026).** Lessons from three diagrams in a software rewrite plan,
+each reproduced with minimal diagrams using `mmdc` 12.0.0 (bundling Mermaid 12.2.0)
+and Chrome for Testing 156:
+
+- The render script now fails a block that prints an error even when `mmdc` exits 0;
+  added [errors that exit 0](#errors-that-exit-0).
+- New [state diagrams](#state-diagrams) section: descriptive state IDs, parallel
+  regions, arrows into nested composites silently moving states out of the box
+  (both engines), and nested composites inside parallel regions failing erratically.
+- Sequence message text must not contain `;`.
+- New layout guidance: split a dense dependency graph into a group diagram plus a
+  table, and choose ELK or dagre per diagram after rendering both.
+- `mmdc` 12.0.0: `-w` is rejected (use `-s` or `--size`); driving Playwright's
+  Chromium through `executablePath`; recording the bundled Mermaid version.
+- Dark-page composite with Pillow when ImageMagick is missing.
+- [Review before sharing](#review-before-sharing) now starts with checking meaning
+  against the source of truth, separately from rendering.
+
+**r1.0.8 (Nov. 6, 2026).** Require descriptive, stable IDs instead of numeric or
+position-based references wherever explicit IDs are supported. Clarified named
+edge styling, meaningful numeric suffixes, and the compatibility exception for
+renderers without edge ID support; added the rule to the review checklist.
+
+**r1.0.7 (Oct. 25, 2026).** Corrected theme-variable color scope, separated
 palette and canvas handling, added type-specific light examples and selector
 contracts, qualified layout/host claims, and added reproducible parser/render,
 computed-style, contrast, and engine checks. See
@@ -1443,25 +1728,9 @@ computed-style, contrast, and engine checks. See
 Older entries below record historical policy; r1.0.7 supersedes their broad
 recommendation of named colors inside theme variables.
 
-
-**CSS r1.0.6 (Oct. 25, 2026).** Prefer CSS named colors when they provide the
-intended appearance, for readability and maintainability. Retain hex colors where
-precise colors are necessary, across embedded CSS, theme variables, and export
-backgrounds.
-
-**CSS r1.0.5 (Oct. 25, 2026).** Separate embedded-CSS edition. Replaced authoring
-instructions and the starter's `classDef` rules with readable `themeCSS: |` rules;
-retained semantic node/subgraph `class` assignments. Added classic-flowchart selector
-recipes, named-edge attribute selectors, CSS precedence, arrowhead limits, and
-computed-style verification. The original guide is unchanged. Validation evidence
-for this edition is recorded in
-[the companion evaluation](mermaid-best-practices-CSS-r1.0.5-evaluation.md).
-
-### Inherited source history
-
-The entries below describe the original guide's development and earlier renders;
-they are provenance, not claims that those versions tested this CSS edition.
-
+**r1.0.6 (Oct. 25, 2026).** Prefer CSS named colors when they provide the intended
+appearance, for readability and maintainability. Retain hex colors where precise
+colors are necessary; clarify that this applies to light and dark palettes.
 
 **r1.0.5 (Oct. 24, 2026).** New [emoji in labels](#emoji-in-labels) section and
 [emoji vocabulary](#appendix-emoji-vocabulary-for-diagrams) appendix, self-contained

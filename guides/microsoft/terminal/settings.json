@@ -1,0 +1,567 @@
+// =============================================================================
+// Windows Terminal settings.json: annotated master copy
+// Companion to ms-terminal-json-settings.md (section numbers refer to it)
+// Reference build: Windows Terminal 1.25; minimum 1.24 (see firstWindowPreference)
+//
+// This is the copy to keep in git. Terminal rewrites the live file and strips
+// these comments (guide §2), so deploy it by COPYING, not editing in place:
+//
+//   $wt = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+//   Copy-Item $wt "$wt.$(Get-Date -Format yyyyMMdd-HHmmss).bak"
+//   Copy-Item .\settings.json $wt -Force
+//
+// Terminal accepts the // comments. Windows PowerShell 5.1's ConvertFrom-Json
+// does not, so use PowerShell 7 if you script against this file.
+//
+// Before deploying:
+//   1. Replace the example hosts with your own. Each SSH profile runs
+//      "ssh.exe <alias>", so the alias must exist in ~/.ssh/config (§9).
+//   2. Generate new GUIDs for the user profiles: [guid]::NewGuid().ToString('B')
+//      (the PowerShell 7 and Windows PowerShell GUIDs are fixed; keep them).
+//   3. Install JetBrains Mono. Install a Nerd Font variant too if your prompt
+//      uses Nerd Font icons (§4).
+//   4. Run Update-WtSshFragment.ps1 for every other host, excluding the ones
+//      defined here (§11):
+//      .\Update-WtSshFragment.ps1 -Exclude github.com, pve01, pve02, pve03, pbs01, web01-prod, bastion-prod, core-sw01
+// =============================================================================
+{
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+
+    // -------------------------------------------------------------------------
+    // Startup and windows (§6)
+    // -------------------------------------------------------------------------
+    // A new tab or window always opens a local shell, never a production host.
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",   // PowerShell 7
+    // Start at sign-in (keeps the quake hotkey registered, §12) is not a key
+    // here in 1.25: turn on Settings → Startup → "Launch on machine startup".
+    // Restores tabs and panes but NOT their text, so production output is never
+    // written to disk. 1.24 has no layout-only option: use "defaultProfile" there.
+    // Never use "persistedLayoutAndContent" / "persistedWindowLayout" on an admin box.
+    "firstWindowPreference": "persistedLayout",
+    "initialCols": 140,
+    "initialRows": 40,
+    "centerOnLaunch": true,
+    "windowingBehavior": "useExisting",           // wt from Run or a shortcut opens a tab here
+    // New tabs go to the end of the tab row (Terminal's default). The guide
+    // (§6) suggests "afterCurrentTab", which opens them next to the active tab.
+    "newTabPosition": "afterLastTab",
+    "tabWidthMode": "titleLength",
+    "warning.confirmCloseAllTabs": true,          // 1.22 and earlier: "confirmCloseAllTabs"
+
+    // A startup layout instead of a restored one (§14). Only takes effect with
+    // "firstWindowPreference": "defaultProfile".
+    // "startupActions": "new-tab -p \"PowerShell\" ; new-tab -p \"pve01\" --title \"PVE cluster\" ; split-pane -V -p \"pve02\" ; move-focus left ; split-pane -H -p \"pve03\" ; move-focus right ; split-pane -H -p \"pbs01\" ; focus-tab -t 0",
+
+    // -------------------------------------------------------------------------
+    // Copy and paste safety (§6)
+    // -------------------------------------------------------------------------
+    // Highlighting copies immediately (PuTTY-style). The guide (§6) recommends
+    // false so selecting text to read it can't overwrite the clipboard; this
+    // copy chooses convenience. Paste is still guarded by the warnings below.
+    "copyOnSelect": true,
+    "copyFormatting": "none",                     // plain text only; no ANSI colors as HTML/RTF
+    "trimBlockSelection": true,
+    "trimPaste": true,
+    // "always", not true: true maps to "automatic", which skips the prompt
+    // whenever the shell has bracketed paste on (bash 5.1+, zsh, PSReadLine).
+    "warning.multiLinePaste": "always",
+    "warning.largePaste": true,                   // prompt above 5 KiB
+    // "." left out so a double-click selects a whole IP address or FQDN.
+    "wordDelimiters": " /\\()\"'-:,;<>~!@#$%^&*|+=[]{}?│",
+
+    // -------------------------------------------------------------------------
+    // Tray and profile sources (§6, §11)
+    // -------------------------------------------------------------------------
+    "minimizeToNotificationArea": true,
+    "alwaysShowNotificationIcon": true,
+    // Windows.Terminal.SSH is the 1.24+ built-in generator. It is off because
+    // the fragment generator (§11, Option B) builds the host list instead.
+    "disabledProfileSources": [ "Windows.Terminal.Azure", "Windows.Terminal.SSH" ],
+
+    "theme": "Admin Dark",
+
+    // -------------------------------------------------------------------------
+    // Actions: what a command does, with an id (§12, §13, §14)
+    // Every action also appears in the Command Palette (Ctrl+Shift+P).
+    // -------------------------------------------------------------------------
+    "actions": [
+        // Quake drop-down window (§12)
+        {
+            "command": {
+                "action": "globalSummon",
+                "name": "_quake",
+                "dropdownDuration": 150,
+                "toggleVisibility": true,
+                "monitor": "toMouse",
+                "desktop": "toCurrent"
+            },
+            "id": "User.quakeToggle"
+        },
+
+        // Open the most-used hosts (§13)
+        { "command": { "action": "newTab", "profile": "pve01" }, "id": "User.open.pve01" },
+        { "command": { "action": "newTab", "profile": "pve02" }, "id": "User.open.pve02" },
+        { "command": { "action": "newTab", "profile": "pve03" }, "id": "User.open.pve03" },
+        { "command": { "action": "newTab", "profile": "pbs01" }, "id": "User.open.pbs01" },
+        { "command": { "action": "newTab", "profile": "core-sw01" }, "id": "User.open.coreSw01" },
+
+        // Pane and tab helpers (§13, §14, §15)
+        { "command": "togglePaneZoom", "id": "User.paneZoom" },
+        { "command": "toggleBroadcastInput", "id": "User.broadcast" },
+        { "command": { "action": "exportBuffer", "path": "" }, "id": "User.exportBuffer" },   // "" = Save dialog
+        { "command": "openTabRenamer", "id": "User.renameTab" },
+        {
+            "name": "Copy as single line",
+            "command": { "action": "copy", "singleLine": true },
+            "id": "User.copySingleLine"
+        },
+
+        // Mark the current tab as production after the fact (§7), for a session
+        // that didn't start from a PROD profile: "ssh web01-prod" typed in a
+        // local tab, or a hop from a bastion. Red tab, Prod Warning colors on
+        // the focused pane, then the tab renamer opens so you can type a PROD
+        // title (it survives the shell setting its own title). "Unmark" resets
+        // the tab color and pane colors and drops the typed title.
+        {
+            "name": "Mark tab as PROD",
+            "command": {
+                "action": "multipleActions",
+                "actions": [
+                    { "action": "setTabColor", "color": "#B00020" },
+                    { "action": "setColorScheme", "colorScheme": "Prod Warning" },
+                    { "action": "openTabRenamer" }
+                ]
+            },
+            "id": "User.markProd"
+        },
+        {
+            "name": "Unmark PROD tab",
+            "command": {
+                "action": "multipleActions",
+                "actions": [
+                    { "action": "setTabColor" },
+                    { "action": "setColorScheme", "colorScheme": "Darcula Admin" },
+                    { "action": "renameTab" }
+                ]
+            },
+            "id": "User.unmarkProd"
+        },
+
+        // Proxmox 2x2 layout in a new tab (§14). Also reachable from the
+        // new-tab menu through the "action" entry in newTabMenu below.
+        {
+            "name": "Layout: PVE cluster 2x2",
+            "command": {
+                "action": "wt",
+                "commandline": "new-tab -p \"pve01\" --title \"PVE cluster\" ; split-pane -V -p \"pve02\" ; move-focus left ; split-pane -H -p \"pve03\" ; move-focus right ; split-pane -H -p \"pbs01\""
+            },
+            "id": "User.layout.pveCluster"
+        },
+
+        // sendInput snippets (§13). Type "snip" in the Command Palette.
+        // They go to the ACTIVE pane: check the tab color first. Snippets
+        // without \r stop before Enter so you can review the command.
+        {
+            "name": "snip: failed systemd units",
+            "command": { "action": "sendInput", "input": "systemctl --failed --no-pager\r" },
+            "id": "User.snip.failedUnits"
+        },
+        {
+            "name": "snip: journal errors this boot",
+            "command": { "action": "sendInput", "input": "journalctl -b -p err --no-pager | tail -n 50\r" },
+            "id": "User.snip.journalErr"
+        },
+        {
+            "name": "snip: disk + inode usage",
+            "command": { "action": "sendInput", "input": "df -hT -x tmpfs -x devtmpfs; df -i -x tmpfs -x devtmpfs\r" },
+            "id": "User.snip.df"
+        },
+        {
+            "name": "snip: PVE cluster + storage status",
+            "command": { "action": "sendInput", "input": "pvecm status; pvesm status\r" },
+            "id": "User.snip.pveStatus"
+        },
+        {
+            "name": "snip: start session log (script)",
+            "command": { "action": "sendInput", "input": "script -f ~/chg-$(date +%F-%H%M).log\r" },
+            "id": "User.snip.scriptLog"
+        },
+        {
+            "name": "snip: become root (no Enter)",
+            "command": { "action": "sendInput", "input": "sudo -i" },
+            "id": "User.snip.sudo"
+        }
+    ],
+
+    // -------------------------------------------------------------------------
+    // Key chords (§13). Check Appendix B first: a user binding silently
+    // replaces a default on the same chord. Ctrl+Alt+1..9 is tab switching (9 = last tab),
+    // so host shortcuts use Ctrl+Alt+Shift+1..9.
+    // -------------------------------------------------------------------------
+    "keybindings": [
+        { "id": "User.quakeToggle", "keys": "win+sc(41)" },          // Win+` on a US layout
+        { "id": "User.open.pve01", "keys": "ctrl+alt+shift+1" },
+        { "id": "User.open.pve02", "keys": "ctrl+alt+shift+2" },
+        { "id": "User.open.pve03", "keys": "ctrl+alt+shift+3" },
+        { "id": "User.open.pbs01", "keys": "ctrl+alt+shift+4" },
+        { "id": "User.open.coreSw01", "keys": "ctrl+alt+shift+5" },
+        { "id": "User.paneZoom", "keys": "ctrl+shift+z" },
+        { "id": "User.broadcast", "keys": "ctrl+shift+b" },
+        { "id": "User.exportBuffer", "keys": "ctrl+shift+e" },
+
+        // Ctrl+C and Ctrl+V are deliberately left UNBOUND (§13). Terminal's
+        // built-in defaults don't bind them; only the settings.json a fresh
+        // install generates does, and this file replaces it. As a result:
+        //   - Ctrl+C always sends an interrupt, even while text is selected,
+        //     so it can never copy when you meant to stop a command.
+        //   - Copy by highlighting (copyOnSelect above), Ctrl+Shift+C, or
+        //     Ctrl+Insert. Paste with Ctrl+Shift+V, Shift+Insert, or
+        //     right-click > Paste, which all go through the paste warnings.
+        //     Ctrl+V reaches the shell instead: a literal ^V in bash, and
+        //     PSReadLine's own paste in PowerShell (no Terminal warning).
+        // To get Windows-style keys instead, uncomment the next two lines;
+        // nothing else needs to change. Ctrl+C then copies when text is
+        // selected and interrupts otherwise.
+        // { "id": "Terminal.CopyToClipboard", "keys": "ctrl+c" },
+        // { "id": "Terminal.PasteFromClipboard", "keys": "ctrl+v" },
+
+        // Unbind a default that steals a chord from remote tmux/vim
+        // (uncomment as-is; the trailing comma is already in place):
+        // { "id": null, "keys": "ctrl+shift+w" },
+
+        // Built-in commands with no default chord (§13), bound directly by
+        // their built-in IDs:
+        //   ctrl+alt+shift+t  reopen the last closed tab or pane (same profile
+        //                     and layout; an SSH tab reconnects, old output
+        //                     is not restored)
+        //   ctrl+alt+shift+r  toggle read-only on the focused pane (watch-only
+        //                     panes such as journalctl -f; also useful to keep
+        //                     a pane out of broadcast input)
+        //   ctrl+alt+shift+s  open the snippets pane (the "snip:" actions as a
+        //                     clickable list; sends to the active pane)
+        { "id": "Terminal.RestoreLastClosed", "keys": "ctrl+alt+shift+t" },
+        { "id": "Terminal.ToggleReadOnlyMode", "keys": "ctrl+alt+shift+r" },
+        { "id": "Terminal.OpenSnippetsPane", "keys": "ctrl+alt+shift+s" },
+        { "id": "User.markProd", "keys": "ctrl+alt+shift+p" },     // mark tab as PROD (§7)
+        { "id": "User.unmarkProd", "keys": "ctrl+alt+shift+u" },   // unmark it
+
+        // Keep this entry last: it has no trailing comma, so every
+        // commented line above can be uncommented without other edits.
+        { "id": "User.renameTab", "keys": "ctrl+shift+r" }
+    ],
+
+    // -------------------------------------------------------------------------
+    // New-tab drop-down (§10). Names must match profile names exactly; an
+    // unmatched name is silently dropped from the menu.
+    // -------------------------------------------------------------------------
+    "newTabMenu": [
+        { "type": "profile", "profile": "PowerShell" },
+        { "type": "profile", "profile": "PowerShell (Admin)" },
+        { "type": "separator" },
+        {
+            // Homelab hosts (profiles under "Homelab" in profiles.list)
+            "type": "folder",
+            "name": "Lab",
+            "icon": "🧪",
+            "entries": [
+                { "type": "profile", "profile": "devdeb" }
+            ]
+        },
+        {
+            "type": "folder",
+            "name": "Proxmox",
+            "icon": "🗄️",
+            "entries": [
+                { "type": "profile", "profile": "pve01" },
+                { "type": "profile", "profile": "pve02" },
+                { "type": "profile", "profile": "pve03" },
+                { "type": "profile", "profile": "pbs01" },
+                { "type": "separator" },
+                { "type": "action", "id": "User.layout.pveCluster" }
+            ]
+        },
+        {
+            "type": "folder",
+            "name": "Production",
+            "icon": "⚠️",
+            "entries": [
+                { "type": "profile", "profile": "web01-prod" },
+                { "type": "profile", "profile": "bastion-prod" }
+            ]
+        },
+        {
+            "type": "folder",
+            "name": "Network",
+            "icon": "🌐",
+            "entries": [
+                { "type": "profile", "profile": "core-sw01" },
+                { "type": "profile", "profile": "Console COM3 (9600 8N1)" }
+            ]
+        },
+        { "type": "separator" },
+        {
+            // Catch-all for unlisted profiles, including fragment-generated hosts.
+            "type": "folder",
+            "name": "Everything else",
+            "inline": "never",
+            "allowEmpty": false,
+            "entries": [ { "type": "remainingProfiles" } ]
+        }
+    ],
+
+    "profiles": {
+        // ---------------------------------------------------------------------
+        // Inherited by every profile, including dynamic and fragment ones (§5)
+        // ---------------------------------------------------------------------
+        "defaults": {
+            "font": {
+                "face": "JetBrains Mono",            // exact installed family name: check with §4
+                "size": 14,
+                "weight": "normal",
+                "features": {
+                    "calt": 1,                       // ligatures on (off in prod profiles)
+                    "zero": 1                        // slashed zero: 0 vs O
+                }
+            },
+            "colorScheme": "Darcula Admin",
+            "intenseTextStyle": "bright",
+            "adjustIndistinguishableColors": "always",
+            "cursorShape": "filledBox",
+            "padding": "6, 4",
+            "historySize": 20000,                    // limits what exportBuffer can save (§15)
+            "scrollbarState": "visible",
+            "bellStyle": [ "window", "taskbar" ],    // e.g. long_job; printf '\a'
+            "rightClickContextMenu": true            // right-click shows a menu, not an instant paste (was experimental.*)
+        },
+
+        "list": [
+            // -----------------------------------------------------------------
+            // Local shells (§8)
+            // -----------------------------------------------------------------
+            {
+                // Dynamic PowerShell 7 profile: fixed GUID on every machine
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "source": "Windows.Terminal.PowershellCore",
+                "name": "PowerShell",
+                "commandline": "pwsh.exe -NoLogo",
+                "startingDirectory": "%USERPROFILE%"
+            },
+            {
+                // Fast shell for the quake window; skips $PROFILE. Create the
+                // quake window with it: wt.exe -w _quake new-tab -p "PowerShell (quick)"
+                "guid": "{0d6f3c55-8b2a-4f7e-a1c4-5e9b2d7f1a01}",
+                "name": "PowerShell (quick)",
+                "commandline": "pwsh.exe -NoLogo -NoProfile",
+                "hidden": true
+            },
+            {
+                // Always opens in a separate elevated window (UAC prompt)
+                "guid": "{3f6b1c2e-6a4d-4f0e-9d1a-0b7e5c2a9e11}",
+                "name": "PowerShell (Admin)",
+                "commandline": "pwsh.exe -NoLogo",
+                "elevate": true,
+                "icon": "🛡️",
+                "tabColor": "#B26A00",
+                "startingDirectory": "%SystemRoot%\\System32"
+            },
+            {
+                // Hidden from the menu, still usable from actions and wt -p
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "name": "Windows PowerShell",
+                "hidden": true
+            },
+            // WSL GUIDs depend on the distribution, so copy yours from the
+            // entry Terminal wrote in the live settings.json, then uncomment:
+            // {
+            //     "guid": "{<your Debian profile GUID>}",
+            //     "name": "Debian (WSL)",
+            //     "commandline": "wsl.exe -d Debian --cd ~"
+            // },
+
+            // -----------------------------------------------------------------
+            // Homelab (§9): green tab like the other lab hosts. The key path
+            // and address are on the command line, so this profile works
+            // without a ~/.ssh/config entry. ssh logs in as your Windows user
+            // name; if the Debian account differs, use user@192.168.0.31.
+            //
+            // Keepalives (§9): ServerAliveInterval=30 sends an encrypted
+            // keepalive after 30 s without data from the server, so NAT,
+            // firewall, and Wi-Fi idle timers see traffic; ServerAliveCountMax=4
+            // drops a dead link after about 2 minutes instead of hanging.
+            // TCPKeepAlive=yes adds TCP-level probes (OpenSSH's default; set
+            // here so it's visible). These don't defeat a server-side logout
+            // such as TMOUT in the remote shell or sshd's ClientAlive* limits.
+            //
+            // To follow §9 instead, add to %USERPROFILE%\.ssh\config:
+            //   Host devdeb
+            //       HostName 192.168.0.31
+            //       IdentityFile ~/.ssh/id_ed25519
+            //       ServerAliveInterval 30
+            //       ServerAliveCountMax 4
+            //       TCPKeepAlive yes
+            // then set "commandline" to "...\\ssh.exe devdeb" and add devdeb
+            // to the -Exclude list in step 4 of the header.
+            // -----------------------------------------------------------------
+            {
+                "guid": "{ab70de4e-6dbc-42c9-b44c-6a70b27dacc8}",
+                "name": "devdeb",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe -i \"%USERPROFILE%\\.ssh\\id_ed25519\" -o ServerAliveInterval=30 -o ServerAliveCountMax=4 -o TCPKeepAlive=yes 192.168.0.31",
+                "icon": "🐧",
+                "tabTitle": "lab devdeb",
+                "suppressApplicationTitle": true,
+                "tabColor": "#2E7D32",
+                "closeOnExit": "never"
+            },
+
+            // -----------------------------------------------------------------
+            // Lab SSH hosts (§9): green tab, fixed title, tab kept open on exit.
+            // Full ssh.exe path so Git's ssh (no ssh-agent service) is never used.
+            // -----------------------------------------------------------------
+            {
+                "guid": "{a7d1e0b4-1c2f-4e0a-9b3d-1f0c2e4a5b01}",
+                "name": "pve01",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe pve01",
+                "icon": "🖥️",
+                "tabTitle": "lab pve01",
+                "suppressApplicationTitle": true,
+                "tabColor": "#2E7D32",
+                "closeOnExit": "never"
+            },
+            {
+                "guid": "{302330f2-c590-4551-9cb9-52bebf078c6b}",
+                "name": "pve02",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe pve02",
+                "icon": "🖥️",
+                "tabTitle": "lab pve02",
+                "suppressApplicationTitle": true,
+                "tabColor": "#2E7D32",
+                "closeOnExit": "never"
+            },
+            {
+                "guid": "{a73e9a1a-e68c-4ed7-8bef-e117da9eea91}",
+                "name": "pve03",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe pve03",
+                "icon": "🖥️",
+                "tabTitle": "lab pve03",
+                "suppressApplicationTitle": true,
+                "tabColor": "#2E7D32",
+                "closeOnExit": "never"
+            },
+            {
+                "guid": "{a7d1e0b4-1c2f-4e0a-9b3d-1f0c2e4a5b02}",
+                "name": "pbs01",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe pbs01",
+                "icon": "💾",
+                "tabTitle": "lab pbs01",
+                "suppressApplicationTitle": true,
+                "tabColor": "#2E7D32",
+                "closeOnExit": "never"
+            },
+
+            // -----------------------------------------------------------------
+            // Production (§7, §9): red tab, Prod Warning background, PROD title,
+            // ligatures off so != and -> show exactly as typed.
+            // -----------------------------------------------------------------
+            {
+                "guid": "{a7d1e0b4-1c2f-4e0a-9b3d-1f0c2e4a5b10}",
+                "name": "web01-prod",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe web01-prod",
+                "icon": "⚠️",
+                "tabTitle": "PROD web01",
+                "suppressApplicationTitle": true,
+                "tabColor": "#B00020",
+                "colorScheme": "Prod Warning",
+                "font": { "features": { "calt": 0 } },
+                "closeOnExit": "never"
+            },
+            {
+                "guid": "{e7c70b0f-a06f-493d-a719-0b0b386b574d}",
+                "name": "bastion-prod",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe bastion-prod",
+                "icon": "⚠️",
+                "tabTitle": "PROD bastion",
+                "suppressApplicationTitle": true,
+                "tabColor": "#B00020",
+                "colorScheme": "Prod Warning",
+                "font": { "features": { "calt": 0 } },
+                "closeOnExit": "never"
+            },
+
+            // -----------------------------------------------------------------
+            // Network devices (§9)
+            // -----------------------------------------------------------------
+            {
+                "guid": "{a7d1e0b4-1c2f-4e0a-9b3d-1f0c2e4a5b11}",
+                "name": "core-sw01",
+                "commandline": "%SystemRoot%\\System32\\OpenSSH\\ssh.exe core-sw01",
+                "icon": "🌐",
+                "tabTitle": "core-sw01",
+                "suppressApplicationTitle": true,
+                "tabColor": "#1565C0",
+                "font": { "features": { "calt": 0 } },   // ACLs: see every character
+                "closeOnExit": "never"
+            },
+            {
+                // Serial console through plink (winget install PuTTY.PuTTY).
+                // plink cannot send Break; use the PuTTY GUI for ROMMON recovery.
+                "guid": "{a7d1e0b4-1c2f-4e0a-9b3d-1f0c2e4a5b20}",
+                "name": "Console COM3 (9600 8N1)",
+                "commandline": "plink.exe -serial COM3 -sercfg 9600,8,n,1,N",
+                "icon": "🔌",
+                "tabColor": "#1565C0",
+                "font": { "features": { "calt": 0 } },
+                "closeOnExit": "never"
+            }
+        ]
+    },
+
+    // -------------------------------------------------------------------------
+    // Color schemes: terminal text palettes (§7)
+    // -------------------------------------------------------------------------
+    "schemes": [
+        {
+            "name": "Darcula Admin",
+            "background": "#1E1F22",
+            "foreground": "#BCBEC4",
+            "cursorColor": "#CED0D6",
+            "selectionBackground": "#214283",
+            "black": "#1E1F22",   "brightBlack": "#5A5D63",
+            "red": "#F75464",     "brightRed": "#FF7A85",
+            "green": "#6AAB73",   "brightGreen": "#8BCB94",
+            "yellow": "#E0BB65",  "brightYellow": "#F2D58C",
+            "blue": "#56A8F5",    "brightBlue": "#7DBDF8",
+            "purple": "#C77DBB",  "brightPurple": "#DB9DD0",
+            "cyan": "#2AACB8",    "brightCyan": "#5CCFD9",
+            "white": "#BCBEC4",   "brightWhite": "#DFE1E5"
+        },
+        {
+            "name": "Prod Warning",
+            "background": "#2A0A0A",
+            "foreground": "#E6E6E6",
+            "cursorColor": "#FF5555",
+            "selectionBackground": "#7A1F1F",
+            "black": "#0C0C0C",   "brightBlack": "#767676",
+            "red": "#E74856",     "brightRed": "#FF6E7A",
+            "green": "#16C60C",   "brightGreen": "#5FE85A",
+            "yellow": "#F9F1A5",  "brightYellow": "#FFF8C4",
+            "blue": "#3B78FF",    "brightBlue": "#7AA2FF",
+            "purple": "#B4009E",  "brightPurple": "#D670C8",
+            "cyan": "#61D6D6",    "brightCyan": "#9AE8E8",
+            "white": "#CCCCCC",   "brightWhite": "#F2F2F2"
+        }
+    ],
+
+    // -------------------------------------------------------------------------
+    // Themes: window and tab chrome (§7). Tabs take their terminal's
+    // background, so a production tab is dark red in the tab strip too.
+    // A profile's tabColor overrides this.
+    // -------------------------------------------------------------------------
+    "themes": [
+        {
+            "name": "Admin Dark",
+            "window": { "applicationTheme": "dark", "useMica": false },
+            "tabRow": { "background": "#18191CFF", "unfocusedBackground": "#18191CFF" },
+            "tab": { "background": "terminalBackground", "unfocusedBackground": null, "showCloseButton": "hover" }
+        }
+    ]
+}

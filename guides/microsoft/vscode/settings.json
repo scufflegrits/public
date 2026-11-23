@@ -1,0 +1,293 @@
+// =============================================================================
+// VS Code user settings.json: annotated master copy
+// Companion to vscode-json-settings.md (section numbers refer to it)
+// Reference build: Visual Studio Code 1.140.0
+//
+// The full sysadmin configuration: every recommendation in the guide in one
+// file. Appendix A of the guide is the shorter baseline; this file adds the
+// §5–§18 extras (terminal profiles and key handoff, Remote - SSH tuning,
+// read-only locks, custom tab labels, Settings Sync exclusions, and more).
+//
+// VS Code settings are JSONC, so these comments survive (unlike Windows
+// Terminal, VS Code never rewrites your comments away). Deploy by copying or
+// symlinking it from your dotfiles repo (§14):
+//
+//   Linux:   ln -sf ~/dotfiles/vscode/settings.json ~/.config/Code/User/settings.json
+//   Windows: New-Item -ItemType SymbolicLink -Path "$env:APPDATA\Code\User\settings.json" `
+//                     -Target "$HOME\dotfiles\vscode\settings.json" -Force
+//
+// Before deploying:
+//   1. Install JetBrains Mono (§5). The font lists fall back to Cascadia Mono
+//      (Windows) and DejaVu Sans Mono (Linux) if it is missing.
+//   2. Install the extensions named in remote.SSH.defaultExtensions and the
+//      ones the commented associations need (§13).
+//   3. Uncomment the proxy block (§12) and remote.SSH.path (Windows) only on
+//      machines that need them; Settings Sync is told to skip them below.
+//   4. Production colours belong in a per-host .code-workspace file, not
+//      here (§16).
+// =============================================================================
+{
+    // ───────────────────────── Settings editor (§1) ─────────────────────────
+    "workbench.settings.editor": "json",             // Ctrl+, opens this file, not the UI
+
+    // ───────────────────────── Line endings (§3) ─────────────────────────
+    // files.eol affects NEW files only. Existing CRLF files stay CRLF; fix
+    // those with git (core.autocrlf input + .gitattributes, Appendix B).
+    "files.eol": "\n",
+    "[bat]": { "files.eol": "\r\n" },               // cmd.exe needs CRLF
+
+    // ───────────────────────── Encoding & whitespace (§4) ─────────────────
+    "files.encoding": "utf8",                        // (default) a BOM breaks #!/bin/bash
+    "files.autoGuessEncoding": false,                // (default) use Reopen with Encoding instead
+    "files.insertFinalNewline": true,                // POSIX text files end with \n
+    "files.trimFinalNewlines": true,                 // ...exactly one
+    "files.trimTrailingWhitespace": true,
+    "editor.renderWhitespace": "boundary",           // leading, trailing, and repeated spaces
+    "editor.renderControlCharacters": true,          // (default)
+    "editor.unicodeHighlight.invisibleCharacters": true,   // (default) zero-width spaces
+    "editor.unicodeHighlight.ambiguousCharacters": true,   // (default) Cyrillic а, smart quotes
+    "editor.unicodeHighlight.allowedCharacters": {   // used on purpose: don't flag (keep it short)
+        "—": true,
+        "→": true
+    },
+
+    // ───────────────────────── Fonts (§5) ─────────────────────────
+    "editor.fontFamily": "'JetBrains Mono', 'Cascadia Mono', Consolas, 'DejaVu Sans Mono', monospace",
+    "editor.fontSize": 14,
+    "editor.lineHeight": 1.5,                        // under 8 = multiplier of fontSize
+    "editor.fontWeight": "normal",
+    "editor.letterSpacing": 0,
+    "editor.mouseWheelZoom": true,                   // Ctrl+scroll zooms the editor font only
+    "terminal.integrated.fontFamily": "'JetBrains Mono', monospace",   // or the Nerd Font for prompt icons
+    "terminal.integrated.fontSize": 14,
+    "debug.console.fontFamily": "'JetBrains Mono', monospace",
+    "scm.inputFontFamily": "editor",                 // commit message box
+    "markdown.preview.fontFamily": "-apple-system, 'Segoe UI', 'Noto Sans', sans-serif",
+
+    // ───────────────────────── Ligatures (§6) ─────────────────────────
+    // On in the editor, off in the terminal and in shell scripts, where you
+    // check commands character by character before running them as root.
+    "editor.fontLigatures": "'calt', 'zero'",        // ligatures + slashed zero
+    "terminal.integrated.fontLigatures.enabled": false,
+
+    // ───────────────────────── Editor (§7) ─────────────────────────
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.detectIndentation": true,                // (default) follow an existing file's style
+    "editor.rulers": [80, 120],
+    "editor.wordWrap": "off",                        // configs: off; prose: on per language
+    "editor.minimap.enabled": false,
+    "editor.stickyScroll.enabled": true,             // shows which YAML block / function you're in
+    "editor.guides.bracketPairs": "active",
+    "editor.bracketPairColorization.enabled": true,  // (default)
+    "editor.cursorBlinking": "solid",
+    "editor.cursorSmoothCaretAnimation": "off",
+    "editor.smoothScrolling": false,
+    "editor.cursorSurroundingLines": 5,              // §18: keep context above/below the cursor
+    "workbench.tree.indent": 16,                     // deeper indent for /etc-style trees
+    "workbench.tree.renderIndentGuides": "always",
+    "breadcrumbs.enabled": true,
+
+    // Editing behaviour: nothing rewrites a live config behind your back.
+    "editor.formatOnSave": false,                    // enable per workspace/language only
+    "editor.formatOnSaveMode": "modifications",      // if a workspace enables it: changed lines only
+    "editor.linkedEditing": true,
+    "editor.emptySelectionClipboard": true,          // (default)
+    "editor.copyWithSyntaxHighlighting": false,      // plain text into tickets and email
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.multiCursorModifier": "alt",             // (default)
+    "files.autoSave": "off",                         // a half-typed config must never hit disk
+    "workbench.editor.enablePreview": true,
+
+    // File associations for configs without a recognised extension
+    "files.associations": {
+        "*.conf": "ini",
+        "**/nginx/**/*.conf": "nginx",               // needs an nginx syntax extension
+        "*.service": "ini",
+        "*.timer": "ini",
+        "*.socket": "ini",
+        "*.network": "ini",
+        "**/sudoers.d/*": "ini",
+        "*.j2": "jinja",                             // needs a Jinja extension
+        "**/inventory/*": "ini",
+        "*.repo": "ini",
+        "*.sources": "properties",                   // deb822 apt sources
+        "Containerfile": "dockerfile",
+        "Containerfile.*": "dockerfile"
+    },
+
+    // ───────────────────────── Per-language (§1, §4, §6, §7) ─────────────
+    // Language blocks beat plain keys even from a narrower scope (§1).
+    "[markdown]": {
+        "files.trimTrailingWhitespace": false,       // two trailing spaces = <br>
+        "editor.wordWrap": "on"
+    },
+    "[yaml]": {
+        "editor.tabSize": 2,
+        "editor.unicodeHighlight.nonBasicASCII": true
+    },
+    "[json]":  { "editor.tabSize": 2 },
+    "[jsonc]": { "editor.tabSize": 2 },
+    "[ini]": {
+        "editor.unicodeHighlight.nonBasicASCII": true
+    },
+    "[shellscript]": {
+        "editor.unicodeHighlight.nonBasicASCII": true,
+        "editor.fontLigatures": "'calt' off, 'zero'" // see 2>&1, <<-, |& exactly as typed
+    },
+    "[powershell]": {
+        "editor.tabSize": 4,
+        "editor.unicodeHighlight.nonBasicASCII": true
+        // Scripts that must run on Windows PowerShell 5.1 AND contain non-ASCII
+        // text need a BOM (§4). Set it per workspace rather than globally:
+        // "files.encoding": "utf8bom"
+    },
+    "[makefile]": { "editor.insertSpaces": false },  // (built-in default) listed for clarity
+
+    // ───────────────────────── Integrated terminal (§8) ─────────────────
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",   // pwsh 7 if installed
+    "terminal.integrated.profiles.linux": {
+        "bash": { "path": "bash", "args": ["-l"] },  // login shell: reads ~/.bash_profile
+        "root shell": { "path": "sudo", "args": ["-i"] }
+    },
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": { "source": "PowerShell", "args": ["-NoLogo"] },
+        "Git Bash": { "source": "Git Bash" },
+        "Debian (WSL)": { "path": "C:\\Windows\\System32\\wsl.exe", "args": ["-d", "Debian"] }
+    },
+    "terminal.integrated.scrollback": 10000,         // default 1000 is short for logs
+    "terminal.integrated.enablePersistentSessions": true,   // (default)
+    "terminal.integrated.shellIntegration.enabled": true,   // (default) exit-code marks, Ctrl+Up/Down
+    // "always", not the default "auto": RHEL 8's bash has no bracketed paste,
+    // so a multi-line paste into a root shell runs every line at once.
+    "terminal.integrated.enableMultiLinePasteWarning": "always",
+    "terminal.integrated.copyOnSelection": false,
+    "terminal.integrated.rightClickBehavior": "default",    // context menu; Windows default pastes
+    "terminal.integrated.cursorStyle": "block",
+    "terminal.integrated.confirmOnExit": "hasChildProcesses",
+    "terminal.integrated.confirmOnKill": "always",
+    "terminal.integrated.stickyScroll.enabled": true,
+    "terminal.integrated.suggest.enabled": true,     // §18: command/path/flag suggestions (trusted workspaces)
+    // Keys the shell should get, not VS Code
+    "terminal.integrated.commandsToSkipShell": [
+        "-workbench.action.quickOpen"                // Ctrl+P and Ctrl+E go to bash
+    ],
+    "terminal.integrated.allowChords": false,        // Ctrl+K = kill-line in the shell
+    // §18: tabs that show where you are
+    "terminal.integrated.tabs.title": "${process}${separator}${sequence}",
+    "terminal.integrated.tabs.description": "${cwd}",
+
+    // ───────────────────────── Remote - SSH (§9; basics in SSH guide §11/§33) ──
+    "remote.SSH.connectTimeout": 30,                 // jump hosts, MFA prompts, slow links
+    "remote.SSH.showLoginTerminal": true,            // see prompts instead of a silent hang
+    "remote.SSH.useLocalServer": false,
+    "remote.SSH.localServerDownload": "auto",        // "always" for hosts without internet (§12)
+    "remote.SSH.lockfilesInTmp": true,               // $HOME on NFS
+    "remote.SSH.defaultExtensions": [
+        "timonwong.shellcheck",
+        "redhat.vscode-yaml",
+        "editorconfig.editorconfig"
+    ],
+    // Per host alias: install the server somewhere other than a noexec /home
+    // "remote.SSH.serverInstallPath": { "small-root-host": "/opt/vscode-users" },
+    "remote.downloadExtensionsLocally": false,       // true for hosts without Marketplace access
+    "remote.autoForwardPorts": true,
+    "remote.restoreForwardedPorts": true,
+    // Windows only: force the Windows OpenSSH client (and its ssh-agent service)
+    // "remote.SSH.path": "C:\\Windows\\System32\\OpenSSH\\ssh.exe",
+
+    // ───────────────────────── Window (§9, §16) ─────────────────────────
+    // The host is always in the title. Production windows also get a red
+    // title bar from their .code-workspace file (§16).
+    "window.title": "${remoteName}${separator}${rootName}${separator}${activeEditorShort}${dirty}",
+    "window.restoreWindows": "all",
+    "window.autoDetectColorScheme": true,            // §18: follow the OS light/dark setting
+    "workbench.preferredDarkColorTheme": "Default Dark Modern",
+    "workbench.preferredLightColorTheme": "Default Light Modern",
+
+    // ───────────────────────── Git & diff (§10) ─────────────────────────
+    "git.autofetch": false,                          // noisy with many remote windows
+    "git.confirmSync": true,                         // (default)
+    "git.enableSmartCommit": false,                  // never commit everything when nothing is staged
+    "git.openRepositoryInParentFolders": "prompt",   // etckeeper's /etc/.git
+    "git.inputValidation": true,
+    "git.blame.editorDecoration.enabled": false,
+    "git.blame.statusBarItem.enabled": true,
+    "diffEditor.ignoreTrimWhitespace": false,        // whitespace changes matter in YAML/Makefiles
+    "diffEditor.renderSideBySide": true,
+    "diffEditor.hideUnchangedRegions.enabled": true,
+    "diffEditor.experimental.showMoves": true,       // §18: a moved Match block shows as a move
+
+    // ───────────────────────── Privacy & updates (§11) ─────────────────
+    "telemetry.telemetryLevel": "off",
+    "telemetry.feedback.enabled": false,
+    "workbench.enableExperiments": false,
+    "workbench.settings.enableNaturalLanguageSearch": false,
+    "update.mode": "manual",                         // nothing updates mid change window
+    "update.showReleaseNotes": true,
+    "extensions.autoUpdate": "off",                  // review extension updates deliberately
+    "extensions.autoCheckUpdates": true,             // ...but still be told about them
+    // Middle ground instead of "off": auto-update after a 72-hour hold
+    // "extensions.autoUpdateDelay": 72,
+    "chat.disableAIFeatures": true,                  // remove if you use Copilot/chat
+    "security.workspace.trust.enabled": true,        // (default) keep it
+    "security.workspace.trust.untrustedFiles": "prompt",
+
+    // ───────────────────────── Proxy (§12): per machine, not synced ─────
+    // "http.proxy": "http://proxy.example.internal:3128",
+    // "http.noProxy": ["localhost", "127.0.0.1", ".example.internal"],
+    // "http.proxySupport": "override",
+    "http.proxyStrictSSL": true,                     // add the CA to the OS store instead
+    "http.systemCertificates": true,                 // (default)
+
+    // ───────────────────────── Settings Sync (§14) ─────────────────────
+    // Machine-specific values stay out of sync even if Sync is turned on.
+    "settingsSync.ignoredSettings": [
+        "remote.SSH.path",
+        "remote.SSH.configFile",
+        "terminal.integrated.profiles.windows",
+        "http.proxy"
+    ],
+
+    // ───────────────────────── Explorer & files (§16, §18) ─────────────
+    "workbench.startupEditor": "none",
+    "explorer.confirmDelete": true,                  // (default)
+    "explorer.compactFolders": false,                // show /etc/nginx/conf.d as three levels
+    "files.readonlyInclude": {                       // open with a lock icon
+        "**/99_Archive/**": true,
+        "**/*.lock": true
+    },
+    "files.readonlyFromPermissions": true,           // files you can't write show as read-only
+    "workbench.localHistory.enabled": true,          // (default) undo a bad save without git
+
+    // ───────────────────────── Power-user safety (§18) ─────────────────
+    // .rpmnew / .dpkg-dist and friends nest under the config they belong to:
+    // an expand arrow on sshd_config means something is waiting to be merged.
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "*": "${capture}.rpmnew, ${capture}.rpmsave, ${capture}.dpkg-dist, ${capture}.dpkg-old, ${capture}.dpkg-new, ${capture}.ucf-dist, ${capture}.bak, ${capture}.orig, ${capture}~"
+    },
+    // Ten tabs called main.yml become webserver/tasks, webserver/handlers, ...
+    "workbench.editor.customLabels.patterns": {
+        "**/roles/*/tasks/main.yml":    "${dirname(1)}/tasks",
+        "**/roles/*/handlers/main.yml": "${dirname(1)}/handlers",
+        "**/roles/*/defaults/main.yml": "${dirname(1)}/defaults",
+        "**/roles/*/vars/main.yml":     "${dirname(1)}/vars",
+        "**/roles/*/meta/main.yml":     "${dirname(1)}/meta",
+        "**/host_vars/*/main.yml":      "${dirname} vars"
+    },
+    // A sound when a long dnf/rsync/Ansible run fails or a task finishes
+    "accessibility.signals.terminalCommandFailed": { "sound": "on" },
+    "accessibility.signals.taskCompleted": { "sound": "on" },
+    "accessibility.signals.taskFailed": { "sound": "on" },
+    // One mouse slip must not move /etc/nginx/sites-enabled into conf.d
+    "explorer.enableDragAndDrop": false,
+    "editor.dragAndDrop": false,
+    // An unsaved edit on a remote host is easy to leave behind
+    "workbench.editor.highlightModifiedTabs": true,
+    // Cap open tabs; unsaved tabs are never closed by the limit
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.limit.value": 12
+}

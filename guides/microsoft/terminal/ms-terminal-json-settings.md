@@ -495,13 +495,14 @@ right-click from pasting into a root shell.
 ### Tray, default terminal, and profile sources
 
 ```jsonc
-"minimizeToNotificationArea": true,
+"minimizeToNotificationArea": false,
 "alwaysShowNotificationIcon": true,
 "disabledProfileSources": [ "Windows.Terminal.Azure", "Windows.Terminal.SSH" ]
 ```
 
-- `minimizeToNotificationArea` sends minimized windows to the system tray, which
-  pairs well with quake mode.
+- With `minimizeToNotificationArea` set to `false`, the minimize button keeps
+  ordinary Terminal windows on the taskbar. Click the taskbar button to restore
+  the window with its existing tabs.
 - `disabledProfileSources` hides whole groups of auto-generated profiles. Built-in
   sources include:
   - `Windows.Terminal.Wsl`
@@ -1216,14 +1217,9 @@ binding silently does nothing. Pick another chord, such as
 
 ### Making it always available
 
-The hotkey is registered by a running Terminal process. To keep it working,
-turn on Settings → Startup → **Launch on machine startup**
-([§6](#startup-and-windows)) and set:
-
-```jsonc
-"minimizeToNotificationArea": true,
-"alwaysShowNotificationIcon": true
-```
+The hotkey is registered by a running Terminal process. To make it available
+after signing in, turn on Settings → Startup → **Launch on machine startup**
+([§6](#startup-and-windows)).
 
 - While any Terminal window exists, including a hidden quake window, the
   hotkey works.
@@ -1597,7 +1593,7 @@ Before using it:
     "warning.multiLinePaste": "always",
     "warning.largePaste": true,
     "wordDelimiters": " /\\()\"'-:,;<>~!@#$%^&*|+=[]{}?│",
-    "minimizeToNotificationArea": true,
+    "minimizeToNotificationArea": false,
     "alwaysShowNotificationIcon": true,
     "disabledProfileSources": [ "Windows.Terminal.Azure", "Windows.Terminal.SSH" ],
     "theme": "Admin Dark",

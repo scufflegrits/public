@@ -11,6 +11,12 @@ beside it, newest first. Each entry says what changed, why, and how it was
 checked. Sources are collected in [References](#references); `[Rn]` tags in
 the entries point to them.
 
+## Unreleased
+
+- Keep ordinary minimized Terminal windows on the taskbar so the taskbar
+  button restores the existing tabs. Set `minimizeToNotificationArea` to
+  `false` in `settings.json` and the guide.
+
 ## r1.0.7 — 2026-11-22
 
 ### Added
